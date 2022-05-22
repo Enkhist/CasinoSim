@@ -2,6 +2,7 @@ import cards
 from cards import Ranks, Suits
 from enum import Enum
 from itertools import groupby
+import copy
 
 """
 This class is going to try to dedicate itself to general poker utilities.
@@ -107,7 +108,9 @@ class BasePoker:
 
     def _getSortedHand(self):
         """Returns hand sorted by face value"""
-        return self.cards.sort(key=lambda x: x.rank)
+        ret = copy.copy(self.cards)
+        ret.sort(key=lambda x: x.rank)
+        return ret
 
     def _groupBySuit(self, cardsIn=None):
         if cardsIn == None:
@@ -192,7 +195,7 @@ class BasePoker:
         #Two card straights is utter nonsense
         if len(cards)<3:
             return False
-        tempHand = cards
+        tempHand = copy.copy(cards)
         tempHand.sort(key=lambda x: x.rank.value)
 
         lowAce = self._straightRoutine(tempHand)
@@ -213,7 +216,7 @@ class BasePoker:
 
         finalCount = [0]
 
-        tempHand = cards
+        tempHand = copy.copy(cards)
         tempHand.sort(key=lambda x: x.rank.value)
 
         finalCount.append(self._straightCountRoutine(tempHand))
@@ -285,7 +288,7 @@ class BasePoker:
         return
 
     def sortedHandHigh(self):
-        returnHand = self.cards
+        returnHand = copy.copy(self.cards)
         returnHand.sort(key=lambda x: x.rank, reverse=True)
         if returnHand[-1].rank == Ranks.ACE:
             returnHand.insert(0,returnHand.pop(-1))
