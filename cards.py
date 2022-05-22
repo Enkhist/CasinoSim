@@ -69,29 +69,6 @@ suitEngShort = {
     3:"♠"
 }
 class Card:
-    """Card ID is as follows:
-    -1 = j
-    00-12 = A-K of Hearts
-    13-25 = A-K of Clubs
-    26-38 = K-A of Diamond
-    39-51 = K-A of Spaces
-
-    card uid (Unsuited ids) are as follows (Jokers excluded)
-    01-10 = Ace through 10
-    11 = jack
-    12 = queen
-    13 = king
-
-    suit id is as follows
-    0 = heart
-    1 = club
-    2 = diamonds
-    3 = spades
-
-    This is designed this way to preserve some of the character of the new 
-    card order. I included where I think jokers should be, however as of now
-    i have absolutely no plans for implementation   
-    """
     def __init__(self, rank, suit):
         self.suit = suit
         self.rank = rank
@@ -140,21 +117,6 @@ class Card:
 
         return self.rank == other.rank
 
-    """def getUniCard(self):
-        if self.uid < 12:
-            offset = self.uid
-        else:
-            offset = self.uid+1
-
-        if self.suit == 0:
-            return chr(127152+offset)
-        if self.suit == 1:
-            return chr(127184+offset)
-        if self.suit == 2:
-            return chr(127168+offset)
-        if self.suit == 3:
-            return chr(127136+offset)"""
-
     def getCardName(self):
         return uidEng[self.uid]+" of "+suitEng[self.suit]
 
@@ -177,10 +139,3 @@ def getDeck():
                 continue
             deck.append(Card(rank, suit))
     return deck
-
-def makeCardsById(req):
-    """Creates cards by id"""
-    x = []
-    for cardId in req:
-        x.append(Card(cardId))
-    return x
