@@ -64,43 +64,10 @@ class BasePoker:
         return NotImplemented
 
     def __le__(self, other):
-        if self.__class__ is other.__class__:
-            if self.getHand()>other.getHand():
-                return False
-            elif self.getHand()<other.getHand():
-                return True
-            else:
-                selfHand = self.sortedHand()
-                otherHand = other.sortedHand()
-                for x in range(0,self.handLength):
-                    if selfHand[x] > otherHand[x]:
-                        return False
-                    elif selfHand[x] < otherHand[x]:
-                        return True
-                    elif selfHand[x] == otherHand[x]:
-                        continue
-                return True
-        return NotImplemented
+        return other>=self
 
     def __lt__(self, other):
-        if self.__class__ is other.__class__:
-            if self.getHand()>other.getHand():
-                return False
-            elif self.getHand()<other.getHand():
-                return True
-            else:
-                selfHand = self.sortedHand()
-                otherHand = other.sortedHand()
-                for x in range(0,self.handLength):
-                    if selfHand[x] > otherHand[x]:
-                        return False
-                    elif selfHand[x] < otherHand[x]:
-                        return True
-                    elif selfHand[x] == otherHand[x]:
-                        continue
-                if selfHand[handLength-1] == otherHand[handLength-1]:
-                    return False
-        return NotImplemented
+        return other>self
 
 
     def __repr__(self):
