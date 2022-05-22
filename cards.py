@@ -11,7 +11,6 @@ class Suits(Enum):
 
 class Ranks(IntEnum):
     JOKER = -1
-    ACE = 1
     TWO = 2
     THREE = 3
     FOUR = 4
@@ -24,7 +23,7 @@ class Ranks(IntEnum):
     JACK = 11
     QUEEN = 12
     KING = 13
-
+    ACE = 14
 uidEng = {
     1:"Ace",
     2:"Two",
