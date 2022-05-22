@@ -272,10 +272,6 @@ class BaseHand(Enum):
             return self.value > other.value
         return NotImplemented
     def __le__(self, other):
-        if self.__class__ is other.__class__:
-            return self.value <= other.value
-        return NotImplemented
+        return other>=self
     def __lt__(self, other):
-        if self.__class__ is other.__class__:
-            return self.value < other.value
-        return NotImplemented       
+        return other>self    
