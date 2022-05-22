@@ -87,18 +87,14 @@ class ThreeCard(poker.BasePoker):
             return returnHand[0:self.handLength]
 
         if hand == self.Hand.PAIR:
-            pair = []
             dupes = self.countDupes(returnHand)
             for card in dupes:
                 if dupes[card] == 2:
                     target = card
             for x in range(0,len(returnHand)):
                 if returnHand[x].rank == target:
-                    pair.append(returnHand[x])
-            for x in range(0,len(returnHand)):
-                if returnHand[x].rank != target:
-                    pair.append(returnHand[x])
-            return pair
+                    returnHand.insert(0,returnHand.pop(x))
+        return returnHand
 
         if hand == self.Hand.FLUSH:
             if len(returnHand) == self.handLength:
