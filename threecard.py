@@ -1,5 +1,6 @@
 import poker
 from poker import Ranks, Suits
+import copy
 class ThreeCard(poker.BasePoker):
     class Hand(poker.BaseHand):
         HIGH = 1
@@ -77,7 +78,7 @@ class ThreeCard(poker.BasePoker):
 
     def sortedHand(self):
         hand = self.getHand()
-        returnHand = self.cards
+        returnHand = copy.copy(self.cards)
         returnHand.sort(key=lambda x: x.rank, reverse=True)
         if returnHand[-1].rank == Ranks.ACE:
             returnHand.insert(0,returnHand.pop(-1))
