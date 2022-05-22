@@ -94,7 +94,7 @@ class ThreeCard(poker.BasePoker):
             for x in range(0,len(returnHand)):
                 if returnHand[x].rank == target:
                     returnHand.insert(0,returnHand.pop(x))
-        return returnHand
+            return returnHand
 
         if hand == self.Hand.FLUSH:
             if len(returnHand) == self.handLength:
