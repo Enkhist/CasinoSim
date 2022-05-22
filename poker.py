@@ -128,7 +128,10 @@ class BasePoker:
         return False
 
     def append(self, card):
-        self.cards.append(card)
+        if isinstance(card, list):
+            self.cards.extend(card)
+        elif isinstance(card, cards.Card):
+            self.cards.append(card)
 
     def _isFlush(self, cards=None):
         """Returns true if full hand is a flush, false if not"""
