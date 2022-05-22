@@ -76,7 +76,6 @@ class Card:
 
     def __ge__(self, other):
         if self.__class__ is other.__class__:
-            print("TEST")
             if self.rank == Ranks.ACE:
                 return True
             return self.rank >= other.rank
