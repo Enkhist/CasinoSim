@@ -94,9 +94,11 @@ class ThreeCard(poker.BasePoker):
                     target = card
             for x in range(0,len(returnHand)):
                 if returnHand[x].rank == target:
-                    pair.append(returnHand.pop(x))
-                pair.extend(returnHand)
-                return pair
+                    pair.append(returnHand[x])
+            for x in range(0,len(returnHand)):
+                if returnHand[x].rank != target:
+                    pair.append(returnHand[x])
+            return pair
 
         if hand == self.Hand.FLUSH:
             if len(returnHand) == self.handLength:
