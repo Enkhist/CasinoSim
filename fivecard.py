@@ -15,6 +15,7 @@ class FiveCard(poker.BasePoker):
         
     def __init__(self, cards=None):
         super().__init__(cards)
+        self.handLength = 5
     """
     What follows is a block to check if hands are present in the card set.
     They do not ensure that a better hand can be made. For example, A Full
@@ -116,25 +117,39 @@ class FiveCard(poker.BasePoker):
             return False
         return True
 
-    def getHand(self):
+    def setHand(self):
         """Return the best hand possible with the cards"""
         if self.isHighCard():
-            return self.Hand.HIGH
+            self.bestHand = self.Hand.HIGH
+            return
         if self.isRoyalFlush():
-            return self.Hand.ROYALFLUSH
+            self.bestHand = self.Hand.ROYALFLUSH
+            return
         if self.isStraightFlush():
-            return self.Hand.STRAIGHTFLUSH
+            self.bestHand = self.Hand.STRAIGHTFLUSH
+            return
         if self.isFourOfKind():
-            return self.Hand.FOUROFKIND
+            self.bestHand = self.Hand.FOUROFKIND
+            return
         if self.isFullHouse():
-            return self.Hand.FULLHOUSE
+            self.bestHand = self.Hand.FULLHOUSE
+            return
         if self.isFlush():
-            return self.Hand.FLUSH
+            self.bestHand = self.Hand.FLUSH
+            return
         if self.isStraight():
-            return self.Hand.STRAIGHT
+            self.bestHand = self.Hand.STRAIGHT
+            return
         if self.isThreeOfKind():
-            return self.Hand.THREEOFKIND
+            self.bestHand = self.Hand.THREEOFKIND
+            return
         if self.isTwoPair():
-            return self.Hand.TWOPAIR
+            self.bestHand = self.Hand.TWOPAIR
+            return
         if self.isPair():
-            return self.Hand.PAIR
+            self.bestHand = self.Hand.PAIR
+            return
+
+
+    def getHand(self):
+        return self.bestHand

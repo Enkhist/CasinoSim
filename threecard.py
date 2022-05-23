@@ -59,22 +59,33 @@ class ThreeCard(poker.BasePoker):
             return False
         return True
 
-    def getHand(self):
+    def setHand(self):
         """Return the best hand possible with the cards"""
         if self.isHighCard():
-            return self.Hand.HIGH
+            self.bestHand = self.Hand.HIGH
+            return
         if self.isMiniRoyal():
-            return self.Hand.MINIROYAL
+            self.bestHand = self.Hand.MINIROYAL
+            return
         if self.isStraightFlush():
-            return self.Hand.STRAIGHTFLUSH
+            self.bestHand = self.Hand.STRAIGHTFLUSH
+            return
         if self.isThreeOfKind():
-            return self.Hand.THREEOFKIND
+            self.bestHand = self.Hand.THREEOFKIND
+            return
         if self.isStraight():
-            return self.Hand.STRAIGHT
+            self.bestHand = self.Hand.STRAIGHT
+            return
         if self.isFlush():
-            return self.Hand.FLUSH
+            self.bestHand = self.Hand.FLUSH
+            return
         if self.isPair():
-            return self.Hand.PAIR
+            self.bestHand = self.Hand.PAIR
+            return
+
+    def getHand(self):
+        """Return the best hand possible with the cards"""
+        return self.bestHand
 
     def sortedHand(self):
         hand = self.getHand()

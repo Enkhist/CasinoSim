@@ -23,6 +23,7 @@ class BasePoker:
             self.cards = cards
         else:
             self.cards = []
+        self.setHand()
 
     def __ge__(self, other):
         if self.__class__ is other.__class__:
@@ -102,6 +103,7 @@ class BasePoker:
             self.cards.extend(card)
         elif isinstance(card, cards.Card):
             self.cards.append(card)
+        self.setHand()
 
     def _isFlush(self, cards=None):
         """Returns true if full hand is a flush, false if not"""
