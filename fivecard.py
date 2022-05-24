@@ -1,5 +1,6 @@
 import poker
 from poker import Ranks
+
 class FiveCard(poker.BasePoker):
     class Hand(poker.BaseHand):
         HIGH = 1
@@ -51,34 +52,14 @@ class FiveCard(poker.BasePoker):
         return super().isStraightFlush(5)
 
     def isFourOfKind(self, cards=None):
-        if cards == None:
-            cards = self.cards
-
-        if len(cards)<4:
-            return False
-
-        dupes = self.countDupes(cards)
-        for card in dupes:
-            if dupes[card] >= 4:
-                return True
+        if self.bestHand == self.Hand.FOUROFKIND:
+            return True
         return False
 
     def isFullHouse(self, cards=None):
-        if cards == None:
-            cards = self.cards
-
-        if len(cards)<5:
-            return False
-
-        hasThree = False
-        hasTwo = False
-        dupes = self.countDupes(cards)
-        for card in dupes:
-            if dupes[card] == 3:
-                hasThree = True
-            if dupes[card] == 2:
-                hasTwo = True
-        return hasThree and hasTwo
+        if self.bestHand == self.Hand.FULLHOUSE:
+            return True
+        return False
 
     def isFlush(self):
         return super().isFlush(5)
@@ -87,20 +68,21 @@ class FiveCard(poker.BasePoker):
         return super().isStraight(5)
 
     def isThreeOfKind(self, cards=None):
-        return super().isThreeOfKind()
+        if self.bestHand in [self.Hand.THREEOFKIND, self.Hand.FULLHOUSE,
+                             self.Hand.FOUROFKIND]:
+            return True
+        return False
 
     def isTwoPair(self, cards=None):
-        dupes = self.countDupes(cards)
-        pairCount = 0
-        for rank in dupes:
-            if dupes[rank]>=2:
-                pairCount+=1
-        if pairCount>=2:
+        if self.bestHand in [self.Hand.FULLHOUSE, self.Hand.TWOPAIR]:
             return True
         return False
 
     def isPair(self):
-        return super().isPair()
+        if self.bestHand in [self.Hand.THREEOFKIND, self.Hand.FULLHOUSE,
+                             self.Hand.FOUROFKIND, self.Hand.TWOPAIR,
+                             self.Hand.PAIR]:
+            return True        
 
     def isHighCard(self):
         """Checks that the hand is nothing but a useless high card hand.
@@ -119,35 +101,33 @@ class FiveCard(poker.BasePoker):
 
     def setHand(self):
         """Return the best hand possible with the cards"""
-        if self.isHighCard():
-            self.bestHand = self.Hand.HIGH
-            return
+
         if self.isRoyalFlush():
             self.bestHand = self.Hand.ROYALFLUSH
             return
-        if self.isStraightFlush():
+        elif self.isStraightFlush():
             self.bestHand = self.Hand.STRAIGHTFLUSH
             return
-        if self.isFourOfKind():
+
+        topDupe = self.bestDupeHand()
+        if topDupe[0] == self.Hand.FOUROFKIND:
             self.bestHand = self.Hand.FOUROFKIND
             return
-        if self.isFullHouse():
+        elif topDupe[0] == self.Hand.FULLHOUSE:
             self.bestHand = self.Hand.FULLHOUSE
             return
-        if self.isFlush():
+        elif self.isFlush():
             self.bestHand = self.Hand.FLUSH
             return
-        if self.isStraight():
+        elif self.isStraight():
             self.bestHand = self.Hand.STRAIGHT
             return
-        if self.isThreeOfKind():
-            self.bestHand = self.Hand.THREEOFKIND
-            return
-        if self.isTwoPair():
-            self.bestHand = self.Hand.TWOPAIR
-            return
-        if self.isPair():
-            self.bestHand = self.Hand.PAIR
+        else:
+            # All hands below a straight are based on
+            # repeats, so topDupe will correctly identify
+            # them.
+
+            self.bestHand = topDupe[0]
             return
 
 

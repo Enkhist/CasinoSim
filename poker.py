@@ -213,6 +213,42 @@ class BasePoker:
                 x.update({card.rank:1})
         return x
 
+    def bestDupeHand(self):
+        """
+        returns the best duplicate-based hand possible
+        Returns either a None, or a list whose index 0
+        is the hand Enum, followed by the self.handLength 
+        best hand. If no pair, returns a HIGH and sorted
+        cards.
+        """
+        dupes = self.countDupes()
+        maxRepeat = max(dupes, key=dupes.get)
+        if "FOUROFKIND" in self.Hand._member_names_ and dupes[maxRepeat] == 4:
+            return [self.Hand.FOUROFKIND,[]]
+
+        elif dupes[maxRepeat] == 3: 
+            if "FULLHOUSE" in self.Hand._member_names_:
+                for n in dupes:
+                    if dupes[n] == 3:
+                        continue
+                    if dupes[n] == 2:
+                        return [self.Hand.FULLHOUSE,[]]
+            return [self.Hand.THREEOFKIND,[]]
+
+        elif dupes[maxRepeat] == 2:
+            if "TWOPAIR" in self.Hand._member_names_:
+                x = 0
+                for n in dupes:
+                    if dupes[n] == 2:
+                        if x == 0:
+                            x+=1
+                            continue
+                        else:
+                            return [self.Hand.TWOPAIR,[]]
+            return [self.Hand.PAIR,[]]
+        else:
+            return [self.Hand.HIGH,[]]
+
     def isPair(self):
         dupes = self.countDupes()
         pairCount = 0

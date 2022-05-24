@@ -66,16 +66,14 @@ class FourCard(poker.BasePoker):
 
     def setHand(self):
         """Return the best hand possible with the cards"""
-        if self.isHighCard():
-            self.bestHand = self.Hand.HIGH
-            return
-        if self.isFourOfKind():
+        topDupe = self.bestDupeHand()
+        if topDupe[0] == self.Hand.FOUROFKIND:
             self.bestHand = self.Hand.FOUROFKIND
             return
         if self.isStraightFlush():
             self.bestHand = self.Hand.STRAIGHTFLUSH
             return
-        if self.isThreeOfKind():
+        if topDupe[0] == self.Hand.THREEOFKIND:
             self.bestHand = self.Hand.THREEOFKIND
             return
         if self.isFlush():
@@ -84,11 +82,14 @@ class FourCard(poker.BasePoker):
         if self.isStraight():
             self.bestHand = self.Hand.STRAIGHT
             return
-        if self.isTwoPair():
+        if topDupe[0] == self.Hand.TWOPAIR:
             self.bestHand = self.Hand.TWOPAIR
             return
-        if self.isPair():
+        if topDupe[0] == self.Hand.PAIR:
             self.bestHand = self.Hand.PAIR
+            return
+        else:
+            self.bestHand = self.Hand.HIGH
             return
 
     def getHand(self):
