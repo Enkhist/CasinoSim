@@ -61,8 +61,8 @@ class FourCard(poker.BasePoker):
             return False
         return True
 
-    def setHand(self):
-        return
+    def getHand(self):
+        return self.bestHand
 
     def setHand(self):
         """Return the best hand possible with the cards"""
