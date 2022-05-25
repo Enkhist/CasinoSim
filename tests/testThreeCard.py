@@ -37,56 +37,6 @@ class TestPoker(unittest.TestCase):
                                                                           [Ranks.SEVEN, Suits.CLUB],
                                                                           [Ranks.TWO, Suits.HEART]]))
 
-
-    #what follows is a series to make sure the identifiers ONLY tests correct on their hands
-    def testMiniRoyal(self):
-        for hand in self.threeCardHand:
-            if hand == "MiniRoyal":
-                self.assertTrue(self.threeCardHand[hand].isMiniRoyal(), hand)
-            else:
-                self.assertFalse(self.threeCardHand[hand].isMiniRoyal(), hand)
-
-    def testStraightFlush(self):
-        for hand in self.threeCardHand:
-            if hand in ["MiniRoyal","StraightFlush"]:
-                self.assertTrue(self.threeCardHand[hand].isStraightFlush(), hand)
-            else:
-                self.assertFalse(self.threeCardHand[hand].isStraightFlush(), hand)
-
-    def testThreeOfKind(self):
-        for hand in self.threeCardHand:
-            if hand in ["ThreeOfKind"]:
-                self.assertTrue(self.threeCardHand[hand].isThreeOfKind(), hand)
-            else:
-                self.assertFalse(self.threeCardHand[hand].isThreeOfKind(), hand)
-    def testStraight(self):
-        for hand in self.threeCardHand:
-            if hand in ["Straight","StraightFlush","MiniRoyal"]:
-                self.assertTrue(self.threeCardHand[hand].isStraight(), hand)
-            else:
-                self.assertFalse(self.threeCardHand[hand].isStraight(), hand)
-
-    def testFlush(self):
-        for hand in self.threeCardHand:
-            if hand in ["Flush","StraightFlush","MiniRoyal"]:
-                self.assertTrue(self.threeCardHand[hand].isFlush(), hand)
-            else:
-                self.assertFalse(self.threeCardHand[hand].isFlush(), hand)
-
-    def testIsPair(self):
-        for hand in self.threeCardHand:
-            if hand in ["ThreeOfKind","Pair"]:
-                self.assertTrue(self.threeCardHand[hand].isPair(), hand)
-            else:
-                self.assertFalse(self.threeCardHand[hand].isPair(), hand)
-
-    def testIsHigh(self):
-        for hand in self.threeCardHand:
-            if hand in ["High"]:
-                self.assertTrue(self.threeCardHand[hand].isHighCard(), hand)
-            else:
-                self.assertFalse(self.threeCardHand[hand].isHighCard(), hand)
-
     def testBestHands(self):
         handDict = {"High":threecard.ThreeCard.Hand.HIGH,
                     "Pair":threecard.ThreeCard.Hand.PAIR,
