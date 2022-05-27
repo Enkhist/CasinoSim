@@ -25,7 +25,6 @@ class Ranks(IntEnum):
     KING = 13
     ACE = 14
 uidEng = {
-    1:"Ace",
     2:"Two",
     3:"Three",
     4:"Four",
@@ -37,10 +36,10 @@ uidEng = {
     10:"Ten",
     11:"Jack",
     12:"Queen",
-    13:"King"
+    13:"King",
+    14:"Ace",
 }
 uidEngShort = {
-    1:" A",
     2:" 2",
     3:" 3",
     4:" 4",
@@ -52,7 +51,8 @@ uidEngShort = {
     10:"10",
     11:" J",
     12:" Q",
-    13:" K"
+    13:" K",
+    14:" A",
 }
 
 suitEng = {
@@ -120,6 +120,13 @@ class Card:
 
     def getShortName(self):
         return ""+uidEngShort[self.rank.value]+suitEngShort[self.suit.value]+""
+
+    def _lowAce(self):
+        """returns 1 for aces."""
+        if self.rank == Ranks.ACE:
+            return 1
+        else:
+            return self.rank.value
 
 def multiCard(input):
     """takes an array of card suits and values, and returns an array of card objects"""
