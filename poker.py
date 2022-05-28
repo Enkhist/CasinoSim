@@ -16,8 +16,8 @@ that utilize 5 card poker hands
 
 class BasePoker:
     def __init__(self, cards=None):
-        self.bestHand = None #stores the best possible hand, at handLength length
-        self.bestCards = None #stores a Hand enum of the best possible hand at that time
+        self.bestHand = None #stores a Hand enum of the best possible hand at that time
+        self.bestCards = None #stores the best possible hand, at handLength length
         if cards:
             self.cards = cards
         else:
