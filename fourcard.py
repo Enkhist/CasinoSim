@@ -11,8 +11,8 @@ class FourCard(poker.BasePoker):
         FOUROFKIND = 8
 
     def __init__(self, cards=None):
-        super().__init__(cards)
         self.handLength = 4
+        super().__init__(cards)
 
     def isFourOfKind(self):
         dupeList = self.countDupes()
@@ -69,27 +69,36 @@ class FourCard(poker.BasePoker):
         topDupe = self.bestDupeHand()
         if topDupe[0] == self.Hand.FOUROFKIND:
             self.bestHand = self.Hand.FOUROFKIND
+            self.bestCards = topDupe[1][0:self.handLength]
             return
-        if self.isStraightFlush():
+        topStraight = self.bestStraightHand()
+        if topStraight[0] == self.Hand.STRAIGHTFLUSH:
             self.bestHand = self.Hand.STRAIGHTFLUSH
+            self.bestCards = topStraight[1][0:self.handLength]
             return
         if topDupe[0] == self.Hand.THREEOFKIND:
             self.bestHand = self.Hand.THREEOFKIND
+            self.bestCards = topDupe[1][0:self.handLength]
             return
         if self.isFlush():
             self.bestHand = self.Hand.FLUSH
+            self.bestCards = self.isFlush()[0:self.handLength]
             return
-        if self.isStraight():
+        if topStraight[0] == self.Hand.STRAIGHT:
             self.bestHand = self.Hand.STRAIGHT
+            self.bestCards = topDupe[1][0:self.handLength]
             return
         if topDupe[0] == self.Hand.TWOPAIR:
             self.bestHand = self.Hand.TWOPAIR
+            self.bestCards = topDupe[1][0:self.handLength]
             return
         if topDupe[0] == self.Hand.PAIR:
             self.bestHand = self.Hand.PAIR
+            self.bestCards = topDupe[1][0:self.handLength]
             return
         else:
             self.bestHand = self.Hand.HIGH
+            self.bestCards = topDupe[1][0:self.handLength]
             return
 
     def getHand(self):

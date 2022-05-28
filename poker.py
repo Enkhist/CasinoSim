@@ -16,7 +16,7 @@ that utilize 5 card poker hands
 
 class BasePoker:
     def __init__(self, cards=None):
-        self.bestHand = None #stores a Hand enum of the best possible hand at that time
+        self.bestHand = None #stores a Hand enum of the best possible hand at that times
         self.bestCards = None #stores the best possible hand, at handLength length
         if cards:
             self.cards = cards
@@ -31,8 +31,8 @@ class BasePoker:
             elif self.getHand()<other.getHand():
                 return False
             else:
-                selfHand = self.sortedHand()
-                otherHand = other.sortedHand()
+                selfHand = self.bestCards
+                otherHand = other.bestCards
                 for x in range(0,self.handLength):
                     if selfHand[x] > otherHand[x]:
                         return True
@@ -50,8 +50,8 @@ class BasePoker:
             elif self.getHand()<other.getHand():
                 return False
             else:
-                selfHand = self.sortedHand()
-                otherHand = other.sortedHand()
+                selfHand = self.bestCards
+                otherHand = other.bestCards
                 for x in range(0,self.handLength):
                     if selfHand[x] > otherHand[x]:
                         return True
@@ -59,7 +59,7 @@ class BasePoker:
                         return False
                     elif selfHand[x] == otherHand[x]:
                         continue
-                if selfHand[handLength-1] == otherHand[handLength-1]:
+                if selfHand[self.handLength-1] == otherHand[self.handLength-1]:
                     return False
         return NotImplemented
 
@@ -71,7 +71,7 @@ class BasePoker:
 
 
     def __repr__(self):
-        return str(self.cards)
+        return str(str(self.bestHand)+str(self.bestCards))
 
     def _getSortedHand(self):
         """Returns hand sorted by face value"""
@@ -220,21 +220,52 @@ class BasePoker:
         best hand. If no pair, returns a HIGH and sorted
         cards.
         """
+        scrapCards = copy.copy(self.cards)
+        scrapCards.sort(key=lambda x: x.rank.value, reverse=True)
         dupes = self.countDupes()
         maxRepeat = max(dupes, key=dupes.get)
         if "FOUROFKIND" in self.Hand._member_names_ and dupes[maxRepeat] == 4:
-            return [self.Hand.FOUROFKIND,[]]
+            retHand = []
+            for rank in dupes:
+                if dupes[rank]==4:
+                    targetRank = rank
+                    break
+            for n in range(0,len(scrapCards)):
+                if scrapCards[n] == targetRank:
+                    retHand.append(scrapCards.pop(n))
+            retHand.extend(scrapCards)
+            return [self.Hand.FOUROFKIND,retHand]
 
-        elif dupes[maxRepeat] == 3: 
+        elif dupes[maxRepeat] == 3:
+            retHand = []
             if "FULLHOUSE" in self.Hand._member_names_:
                 for n in dupes:
                     if dupes[n] == 3:
+                        tripTarget = n
                         continue
                     if dupes[n] == 2:
-                        return [self.Hand.FULLHOUSE,[]]
-            return [self.Hand.THREEOFKIND,[]]
+                        for card in scrapCards:
+                            if card.rank == tripTarget:
+                                retHand.append(card)
+                        for card in scrapCards:
+                            if card.rank == n:
+                                retHand.append(card)
+                        return [self.Hand.FULLHOUSE,retHand]
+            for n in dupes:
+                if dupes[n] == 3:
+                    tripTarget = n
+                    break
+            for card in range(0,len(scrapCards)):
+                if scrapCards[card].rank == tripTarget:
+                    scrapCards.insert(0,scrapCards.pop(card))
+            return [self.Hand.THREEOFKIND,scrapCards]
 
         elif dupes[maxRepeat] == 2:
+            for dupe in dupes:
+                if dupes[dupe] == 2:
+                    for card in range(0,len(scrapCards)):
+                        if scrapCards[card].rank == dupe:
+                            scrapCards.insert(0,scrapCards.pop(card))
             if "TWOPAIR" in self.Hand._member_names_:
                 x = 0
                 for n in dupes:
@@ -243,10 +274,10 @@ class BasePoker:
                             x+=1
                             continue
                         else:
-                            return [self.Hand.TWOPAIR,[]]
-            return [self.Hand.PAIR,[]]
+                            return [self.Hand.TWOPAIR,scrapCards]
+            return [self.Hand.PAIR,scrapCards]
         else:
-            return [self.Hand.HIGH,[]]
+            return [self.Hand.HIGH,scrapCards]
 
     def bestStraightHand(self):
         """
@@ -332,7 +363,8 @@ class BasePoker:
         groups = self._groupBySuit(self.cards)
         for group in groups:
             if len(group) >= maxlen:
-                return True
+                group.sort(key=lambda x:x.rank,reverse=True)
+                return group
 
     def isStraight(self,maxlen):
         if self._straightCount(self.cards) >= maxlen:

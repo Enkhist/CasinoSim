@@ -12,8 +12,8 @@ class ThreeCard(poker.BasePoker):
         MINIROYAL = 7
 
     def __init__(self, cards=None):
-        super().__init__(cards)
         self.handLength = 3
+        super().__init__(cards)
 
     def isMiniRoyal(self):
         royalCards = [Ranks.QUEEN, Ranks.KING, Ranks.ACE]
@@ -61,34 +61,42 @@ class ThreeCard(poker.BasePoker):
 
     def setHand(self):
         """Return the best hand possible with the cards"""
-        if self.isMiniRoyal():
+        topStraight = self.bestStraightHand()
+        if topStraight[0] == self.Hand.MINIROYAL:
             self.bestHand = self.Hand.MINIROYAL
+            self.bestCards = topStraight[1][0:self.handLength]
             return
 
-        elif self.isStraightFlush():
+        elif topStraight[0] == self.Hand.STRAIGHTFLUSH:
             self.bestHand = self.Hand.STRAIGHTFLUSH
+            self.bestCards = topStraight[1][0:self.handLength]
             return
 
         topDupe = self.bestDupeHand()
 
         if topDupe[0] == self.Hand.THREEOFKIND:
             self.bestHand = self.Hand.THREEOFKIND
+            self.bestCards = topDupe[1][0:self.handLength]
             return
 
-        elif self.isStraight():
+        elif topStraight[0] == self.Hand.STRAIGHT:
             self.bestHand = self.Hand.STRAIGHT
+            self.bestCards = topStraight[1][0:self.handLength]
             return
 
         elif self.isFlush():
             self.bestHand = self.Hand.FLUSH
+            self.bestCards = self.isFlush()[0:self.handLength]
             return
 
         if topDupe[0] == self.Hand.PAIR:
             self.bestHand = self.Hand.PAIR
+            self.bestCards = topDupe[1][0:self.handLength]
             return
             
         else:
             self.bestHand = self.Hand.HIGH
+            self.bestCards = topDupe[1][0:self.handLength]
             return
 
     def getHand(self):

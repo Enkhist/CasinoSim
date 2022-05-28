@@ -15,8 +15,8 @@ class FiveCard(poker.BasePoker):
         ROYALFLUSH = 10
         
     def __init__(self, cards=None):
-        super().__init__(cards)
         self.handLength = 5
+        super().__init__(cards)
     """
     What follows is a block to check if hands are present in the card set.
     They do not ensure that a better hand can be made. For example, A Full
@@ -29,27 +29,13 @@ class FiveCard(poker.BasePoker):
     every function to test the cards.
     """
     def isRoyalFlush(self, cards=None):
-        if cards == None:
-            cards = self.cards
-
-        if len(cards)<5:
-            return False
-
-        royalCards = [Ranks.TEN, Ranks.JACK, Ranks.QUEEN, Ranks.KING, Ranks.ACE]
-
-        testStack = []
-
-        for card in cards:
-            if card.rank in royalCards:
-                testStack.append(card)
-        grouped = self._groupBySuit(testStack)
-        for cardGroup in grouped:
-            if self._isSequential(cardGroup):
-                return True
-        return False
+        if self.bestHand == self.Hand.ROYALFLUSH:
+            return self.Hand.ROYALFLUSH
 
     def isStraightFlush(self):
-        return super().isStraightFlush(5)
+        if self.bestHand in [self.Hand.ROYALFLUSH, self.Hand.STRAIGHTFLUSH]:
+            return True
+        return False
 
     def isFourOfKind(self, cards=None):
         if self.bestHand == self.Hand.FOUROFKIND:
@@ -65,7 +51,9 @@ class FiveCard(poker.BasePoker):
         return super().isFlush(5)
 
     def isStraight(self):
-        return super().isStraight(5)
+        if self.bestHand in [self.Hand.ROYALFLUSH, self.Hand.STRAIGHTFLUSH, self.Hand.STRAIGHT]:
+            return True
+        return False
 
     def isThreeOfKind(self, cards=None):
         if self.bestHand in [self.Hand.THREEOFKIND, self.Hand.FULLHOUSE,
@@ -101,33 +89,39 @@ class FiveCard(poker.BasePoker):
 
     def setHand(self):
         """Return the best hand possible with the cards"""
-
-        if self.isRoyalFlush():
+        topStraight = self.bestStraightHand()
+        if topStraight[0] == self.Hand.ROYALFLUSH:
             self.bestHand = self.Hand.ROYALFLUSH
+            self.bestCards = topStraight[1][0:self.handLength]
             return
-        elif self.isStraightFlush():
+        elif topStraight[0] == self.Hand.STRAIGHTFLUSH:
             self.bestHand = self.Hand.STRAIGHTFLUSH
+            self.bestCards = topStraight[1][0:self.handLength]
             return
 
         topDupe = self.bestDupeHand()
         if topDupe[0] == self.Hand.FOUROFKIND:
             self.bestHand = self.Hand.FOUROFKIND
+            self.bestCards = topDupe[1][0:self.handLength]
             return
         elif topDupe[0] == self.Hand.FULLHOUSE:
             self.bestHand = self.Hand.FULLHOUSE
+            self.bestCards = topDupe[1][0:self.handLength]
             return
         elif self.isFlush():
             self.bestHand = self.Hand.FLUSH
+            self.bestCards = self.isFlush()[0:self.handLength]
             return
-        elif self.isStraight():
+        elif topStraight[0] == self.Hand.STRAIGHT:
             self.bestHand = self.Hand.STRAIGHT
+            self.bestCards = topStraight[1][0:self.handLength]
             return
         else:
             # All hands below a straight are based on
             # repeats, so topDupe will correctly identify
             # them.
-
             self.bestHand = topDupe[0]
+            self.bestCards = topDupe[1][0:self.handLength]
             return
 
 
