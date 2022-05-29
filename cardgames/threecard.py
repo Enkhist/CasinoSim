@@ -1,5 +1,5 @@
-import poker
-from poker import R
+import cardgames.poker as poker
+from cardgames.poker import R
 import copy
 
 

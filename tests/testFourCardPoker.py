@@ -1,5 +1,5 @@
-from fourcard import FourCard
-from cards import multiCard, Ranks as R, Suits as S
+from cardgames.fourcard import FourCard
+from cardgames.cards import multiCard, Ranks as R, Suits as S
 import unittest
 
 

@@ -1,5 +1,5 @@
-from threecard import ThreeCard
-from cards import multiCard, Ranks as R, Suits as S
+from cardgames.threecard import ThreeCard
+from cardgames.cards import multiCard, Ranks as R, Suits as S
 import unittest
 
 

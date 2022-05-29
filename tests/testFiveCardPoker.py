@@ -1,5 +1,5 @@
-from fivecard import FiveCard
-from cards import multiCard, Ranks as R, Suits as S, Card
+from cardgames.fivecard import FiveCard
+from cardgames.cards import multiCard, Ranks as R, Suits as S, Card
 import unittest
 
 

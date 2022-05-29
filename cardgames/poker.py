@@ -1,5 +1,5 @@
-import cards
-from cards import Ranks as R
+import cardgames.cards as cards
+from cardgames.cards import Ranks as R
 from enum import Enum
 from itertools import groupby
 import copy
