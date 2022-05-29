@@ -2,7 +2,7 @@ import timeit
 import unittest
 
 
-class TestPoker(unittest.TestCase):
+class TimedRuns(unittest.TestCase):
     def testRandomHands(self):
         setup = "from cardgames import fivecard;"\
                 "from cardgames import fourcard;"\
@@ -14,10 +14,10 @@ class TestPoker(unittest.TestCase):
                 "fivecard.FiveCard(deck[0:5])"
 
         test4 = "shuffle(deck);"\
-                "fivecard.FiveCard(deck[0:4])"
+                "fourcard.FourCard(deck[0:4])"
 
         test3 = "shuffle(deck);"\
-                "fivecard.FiveCard(deck[0:3])"
+                "threecard.ThreeCard(deck[0:3])"
 
         print("Five:" + str(timeit.timeit(stmt=test5,
                                           setup=setup, number=100000)))
