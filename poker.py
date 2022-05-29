@@ -347,7 +347,26 @@ class BasePoker:
         else:
             return [self.Hand.STRAIGHT,straights[0]]
 
-
+    def bestFlush(self):
+        """
+        returns the best flush hand possible
+        Returns either a None, or a list whose index 0
+        is the hand Enum, followed by the self.handLength 
+        best flush. If no straight, returns None in index 0
+        """
+        flushes = []
+        groups = self._groupBySuit(self.cards)
+        for group in groups:
+            if len(group) >= self.handLength:
+                group.sort(key=lambda x:x.rank,reverse=True)
+                flushes.append(group)
+        if len(flushes) > 1:
+            flushes.sort(key=lambda x:x[0].rank, reverse=True)
+            return [self.Hand.FLUSH,flushes[0]]
+        elif len(flushes) == 1:
+            return [self.Hand.FLUSH,flushes[0]]
+        else:
+            return [None, []]
     def isPair(self):
         dupes = self.countDupes()
         pairCount = 0
