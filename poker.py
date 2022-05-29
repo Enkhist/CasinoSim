@@ -240,10 +240,13 @@ class BasePoker:
 
         elif dupes[maxRepeat] == 3:
             retHand = []
+            for n in dupes:
+                if dupes[n] == 3:
+                    tripTarget = n
+                    break
             if "FULLHOUSE" in self.Hand._member_names_:
                 for n in dupes:
                     if dupes[n] == 3:
-                        tripTarget = n
                         continue
                     if dupes[n] == 2:
                         for card in scrapCards:
@@ -253,10 +256,6 @@ class BasePoker:
                             if card.rank == n:
                                 retHand.append(card)
                         return [self.Hand.FULLHOUSE, retHand]
-            for n in dupes:
-                if dupes[n] == 3:
-                    tripTarget = n
-                    break
             for card in range(0, len(scrapCards)):
                 if scrapCards[card].rank == tripTarget:
                     scrapCards.insert(0, scrapCards.pop(card))
