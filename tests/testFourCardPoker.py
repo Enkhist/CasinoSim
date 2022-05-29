@@ -1,63 +1,60 @@
-import fourcard as fcp
-import cards
-from cards import Ranks, Suits #syntactic help
-import random
+from fourcard import FourCard
+from cards import multiCard, Ranks as R, Suits as S
 import unittest
 
-class TestPoker(unittest.TestCase):
 
+class TestPoker(unittest.TestCase):
     @classmethod
     def setUp(self):
-        self.fourCardHands = {}
-        self.fourCardHands['FourOfKind'] = fcp.FourCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                                           [Ranks.ACE, Suits.DIAMOND],
-                                                                           [Ranks.ACE, Suits.CLUB],
-                                                                           [Ranks.ACE, Suits.HEART]]))
+        self.fcpHands = {}
+        self.fcpHands['FourOfKind'] = FourCard(multiCard([[R.ACE, S.SPADE],
+                                                          [R.ACE, S.DIAMOND],
+                                                          [R.ACE, S.CLUB],
+                                                          [R.ACE, S.HEART]]))
 
-        self.fourCardHands['StraightFlush'] = fcp.FourCard(cards.multiCard([[Ranks.FOUR, Suits.SPADE],
-                                                                           [Ranks.FIVE, Suits.SPADE],
-                                                                           [Ranks.SIX, Suits.SPADE],
-                                                                           [Ranks.SEVEN, Suits.SPADE]]))
+        self.fcpHands['sFlush'] = FourCard(multiCard([[R.FOUR, S.SPADE],
+                                                      [R.FIVE, S.SPADE],
+                                                      [R.SIX, S.SPADE],
+                                                      [R.SEVEN, S.SPADE]]))
 
-        self.fourCardHands['ThreeOfKind'] = fcp.FourCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                                           [Ranks.ACE, Suits.CLUB],
-                                                                           [Ranks.ACE, Suits.DIAMOND],
-                                                                           [Ranks.KING, Suits.HEART]]))
+        self.fcpHands['ThreeOfKind'] = FourCard(multiCard([[R.ACE, S.SPADE],
+                                                           [R.ACE, S.CLUB],
+                                                           [R.ACE, S.DIAMOND],
+                                                           [R.KING, S.HEART]]))
 
-        self.fourCardHands['Flush'] = fcp.FourCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                                      [Ranks.SEVEN, Suits.SPADE],
-                                                                      [Ranks.TWO, Suits.SPADE],
-                                                                      [Ranks.EIGHT, Suits.SPADE]]))
+        self.fcpHands['Flush'] = FourCard(multiCard([[R.ACE, S.SPADE],
+                                                     [R.SEVEN, S.SPADE],
+                                                     [R.TWO, S.SPADE],
+                                                     [R.EIGHT, S.SPADE]]))
 
-        self.fourCardHands['Straight'] = fcp.FourCard(cards.multiCard([[Ranks.FOUR, Suits.SPADE],
-                                                                           [Ranks.FIVE, Suits.CLUB],
-                                                                           [Ranks.SIX, Suits.DIAMOND],
-                                                                           [Ranks.SEVEN, Suits.HEART]]))
+        self.fcpHands['Straight'] = FourCard(multiCard([[R.FOUR, S.SPADE],
+                                                        [R.FIVE, S.CLUB],
+                                                        [R.SIX, S.DIAMOND],
+                                                        [R.SEVEN, S.HEART]]))
 
-        self.fourCardHands['TwoPair'] = fcp.FourCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                                           [Ranks.ACE, Suits.HEART],
-                                                                           [Ranks.KING, Suits.CLUB],
-                                                                           [Ranks.KING, Suits.DIAMOND]]))
+        self.fcpHands['TwoPair'] = FourCard(multiCard([[R.ACE, S.SPADE],
+                                                       [R.ACE, S.HEART],
+                                                       [R.KING, S.CLUB],
+                                                       [R.KING, S.DIAMOND]]))
 
-        self.fourCardHands['Pair'] = fcp.FourCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                                     [Ranks.ACE, Suits.DIAMOND],
-                                                                     [Ranks.SIX, Suits.HEART],
-                                                                     [Ranks.SEVEN, Suits.CLUB]]))
+        self.fcpHands['Pair'] = FourCard(multiCard([[R.ACE, S.SPADE],
+                                                    [R.ACE, S.DIAMOND],
+                                                    [R.SIX, S.HEART],
+                                                    [R.SEVEN, S.CLUB]]))
 
-        self.fourCardHands['High'] = fcp.FourCard(cards.multiCard([[Ranks.SEVEN, Suits.SPADE],
-                                                                     [Ranks.THREE, Suits.CLUB],
-                                                                     [Ranks.NINE, Suits.DIAMOND],
-                                                                     [Ranks.TWO, Suits.HEART]]))
+        self.fcpHands['High'] = FourCard(multiCard([[R.SEVEN, S.SPADE],
+                                                    [R.THREE, S.CLUB],
+                                                    [R.NINE, S.DIAMOND],
+                                                    [R.TWO, S.HEART]]))
 
     def testBestHands(self):
-        handDict = {"High":fcp.FourCard.Hand.HIGH,
-                    "Pair":fcp.FourCard.Hand.PAIR,
-                    "TwoPair":fcp.FourCard.Hand.TWOPAIR,
-                    "Straight":fcp.FourCard.Hand.STRAIGHT,
-                    "Flush":fcp.FourCard.Hand.FLUSH,
-                    "ThreeOfKind":fcp.FourCard.Hand.THREEOFKIND,
-                    "StraightFlush":fcp.FourCard.Hand.STRAIGHTFLUSH,
-                    "FourOfKind":fcp.FourCard.Hand.FOUROFKIND,}
-        for hand in handDict:
-            self.assertEqual(self.fourCardHands[hand].getHand(), handDict[hand], hand)
-
+        handDict = {"High": FourCard.Hand.HIGH,
+                    "Pair": FourCard.Hand.PAIR,
+                    "TwoPair": FourCard.Hand.TWOPAIR,
+                    "Straight": FourCard.Hand.STRAIGHT,
+                    "Flush": FourCard.Hand.FLUSH,
+                    "ThreeOfKind": FourCard.Hand.THREEOFKIND,
+                    "sFlush": FourCard.Hand.STRAIGHTFLUSH,
+                    "FourOfKind": FourCard.Hand.FOUROFKIND}
+        for h in handDict:
+            self.assertEqual(self.fcpHands[h].getHand(), handDict[h], h)

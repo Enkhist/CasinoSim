@@ -1,4 +1,6 @@
 import poker
+
+
 class FourCard(poker.BasePoker):
     class Hand(poker.BaseHand):
         HIGH = 1
@@ -17,7 +19,7 @@ class FourCard(poker.BasePoker):
     def isFourOfKind(self):
         dupeList = self.countDupes()
         for dupe in dupeList:
-            if dupeList[dupe]>=4:
+            if dupeList[dupe] >= 4:
                 return True
             return False
 
@@ -26,7 +28,7 @@ class FourCard(poker.BasePoker):
 
     def isThreeOfKind(self):
         return super().isThreeOfKind()
-    
+
     def isFlush(self):
         return super().isFlush(4)
 
@@ -37,9 +39,9 @@ class FourCard(poker.BasePoker):
         dupeList = self.countDupes()
         count = 0
         for dupe in dupeList:
-            if dupeList[dupe]>=2:
-                count+=1
-        if count>=2:
+            if dupeList[dupe] >= 2:
+                count += 1
+        if count >= 2:
             return True
         return False
 
@@ -48,12 +50,12 @@ class FourCard(poker.BasePoker):
 
     def isHighCard(self):
         """Checks that the hand is nothing but a useless high card hand.
-        This function has the distinction of being reliant on the cards 
+        This function has the distinction of being reliant on the cards
         not being anything else.
         """
         dupes = self.countDupes(self.cards)
         for card in dupes:
-            if dupes[card]>1:
+            if dupes[card] > 1:
                 return False
         if self.isFlush():
             return False
@@ -80,9 +82,10 @@ class FourCard(poker.BasePoker):
             self.bestHand = self.Hand.THREEOFKIND
             self.bestCards = topDupe[1][0:self.handLength]
             return
-        if self.isFlush():
+        bestFlush = self.bestFlush()
+        if bestFlush[0] == self.Hand.FLUSH:
             self.bestHand = self.Hand.FLUSH
-            self.bestCards = self.isFlush()[0:self.handLength]
+            self.bestCards = bestFlush[0:self.handLength]
             return
         if topStraight[0] == self.Hand.STRAIGHT:
             self.bestHand = self.Hand.STRAIGHT
@@ -100,6 +103,3 @@ class FourCard(poker.BasePoker):
             self.bestHand = self.Hand.HIGH
             self.bestCards = topDupe[1][0:self.handLength]
             return
-
-    def getHand(self):
-        return self.bestHand

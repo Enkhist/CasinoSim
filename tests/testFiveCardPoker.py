@@ -1,98 +1,95 @@
-import fivecard
-import cards
-from cards import Ranks, Suits #syntactic help
-import random
+from fivecard import FiveCard
+from cards import multiCard, Ranks as R, Suits as S, Card
 import unittest
 
 class TestPoker(unittest.TestCase):
 
     @classmethod
     def setUp(self):
-        self.fiveCardHands = {}
-        self.fiveCardHands['RoyalFlush'] = fivecard.FiveCard(cards.multiCard([[Ranks.TEN, Suits.SPADE],
-                                                              [Ranks.JACK, Suits.SPADE],
-                                                              [Ranks.QUEEN, Suits.SPADE],
-                                                              [Ranks.KING, Suits.SPADE],
-                                                              [Ranks.ACE, Suits.SPADE]]))
+        self.fiveHands = {}
+        self.fiveHands['RoyalFlush'] = FiveCard(multiCard([[R.TEN, S.SPADE],
+                                                           [R.JACK, S.SPADE],
+                                                           [R.QUEEN, S.SPADE],
+                                                           [R.KING, S.SPADE],
+                                                           [R.ACE, S.SPADE]]))
 
-        self.fiveCardHands['StraightFlush'] = fivecard.FiveCard(cards.multiCard([[Ranks.FOUR, Suits.SPADE],
-                                                                 [Ranks.FIVE, Suits.SPADE],
-                                                                 [Ranks.SIX, Suits.SPADE],
-                                                                 [Ranks.SEVEN, Suits.SPADE],
-                                                                 [Ranks.EIGHT, Suits.SPADE]]))
+        self.fiveHands['sFlush'] = FiveCard(multiCard([[R.FOUR, S.SPADE],
+                                                       [R.FIVE, S.SPADE],
+                                                       [R.SIX, S.SPADE],
+                                                       [R.SEVEN, S.SPADE],
+                                                       [R.EIGHT, S.SPADE]]))
 
-        self.fiveCardHands['FourOfKind'] = fivecard.FiveCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                              [Ranks.ACE, Suits.CLUB],
-                                                              [Ranks.ACE, Suits.DIAMOND],
-                                                              [Ranks.ACE, Suits.HEART],
-                                                              [Ranks.SEVEN, Suits.SPADE]]))
+        self.fiveHands['Quads'] = FiveCard(multiCard([[R.ACE, S.SPADE],
+                                                      [R.ACE, S.CLUB],
+                                                      [R.ACE, S.DIAMOND],
+                                                      [R.ACE, S.HEART],
+                                                      [R.SEVEN, S.SPADE]]))
 
-        self.fiveCardHands['FullHouse'] = fivecard.FiveCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                             [Ranks.ACE, Suits.DIAMOND],
-                                                             [Ranks.ACE, Suits.CLUB],
-                                                             [Ranks.KING, Suits.HEART],
-                                                             [Ranks.KING, Suits.SPADE]]))
+        self.fiveHands['FullHouse'] = FiveCard(multiCard([[R.ACE, S.SPADE],
+                                                          [R.ACE, S.DIAMOND],
+                                                          [R.ACE, S.CLUB],
+                                                          [R.KING, S.HEART],
+                                                          [R.KING, S.SPADE]]))
 
-        self.fiveCardHands['Flush'] = fivecard.FiveCard(cards.multiCard([[Ranks.THREE, Suits.SPADE],
-                                                         [Ranks.EIGHT, Suits.SPADE],
-                                                         [Ranks.FIVE, Suits.SPADE],
-                                                         [Ranks.TWO, Suits.SPADE],
-                                                         [Ranks.JACK, Suits.SPADE]]))
+        self.fiveHands['Flush'] = FiveCard(multiCard([[R.THREE, S.SPADE],
+                                                      [R.EIGHT, S.SPADE],
+                                                      [R.FIVE, S.SPADE],
+                                                      [R.TWO, S.SPADE],
+                                                      [R.JACK, S.SPADE]]))
 
-        self.fiveCardHands['Straight'] = fivecard.FiveCard(cards.multiCard([[Ranks.THREE, Suits.SPADE],
-                                                            [Ranks.FOUR, Suits.CLUB],
-                                                            [Ranks.FIVE, Suits.DIAMOND],
-                                                            [Ranks.SIX, Suits.HEART],
-                                                            [Ranks.SEVEN, Suits.SPADE]]))
+        self.fiveHands['Straight'] = FiveCard(multiCard([[R.THREE, S.SPADE],
+                                                         [R.FOUR, S.CLUB],
+                                                         [R.FIVE, S.DIAMOND],
+                                                         [R.SIX, S.HEART],
+                                                         [R.SEVEN, S.SPADE]]))
 
-        self.fiveCardHands['ThreeOfKind'] = fivecard.FiveCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                               [Ranks.ACE, Suits.CLUB],
-                                                               [Ranks.ACE, Suits.DIAMOND],
-                                                               [Ranks.KING, Suits.SPADE],
-                                                               [Ranks.FOUR, Suits.SPADE]]))
+        self.fiveHands['Trips'] = FiveCard(multiCard([[R.ACE, S.SPADE],
+                                                      [R.ACE, S.CLUB],
+                                                      [R.ACE, S.DIAMOND],
+                                                      [R.KING, S.SPADE],
+                                                      [R.FOUR, S.SPADE]]))
 
-        self.fiveCardHands['TwoPair'] = fivecard.FiveCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                           [Ranks.ACE, Suits.CLUB],
-                                                           [Ranks.KING, Suits.DIAMOND],
-                                                           [Ranks.KING, Suits.HEART],
-                                                           [Ranks.TWO, Suits.SPADE]]))
+        self.fiveHands['TwoPair'] = FiveCard(multiCard([[R.ACE, S.SPADE],
+                                                        [R.ACE, S.CLUB],
+                                                        [R.KING, S.DIAMOND],
+                                                        [R.KING, S.HEART],
+                                                        [R.TWO, S.SPADE]]))
 
-        self.fiveCardHands['Pair'] = fivecard.FiveCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                        [Ranks.ACE, Suits.HEART],
-                                                        [Ranks.THREE, Suits.CLUB],
-                                                        [Ranks.FOUR, Suits.CLUB],
-                                                        [Ranks.KING, Suits.CLUB]]))
+        self.fiveHands['Pair'] = FiveCard(multiCard([[R.ACE, S.SPADE],
+                                                     [R.ACE, S.HEART],
+                                                     [R.THREE, S.CLUB],
+                                                     [R.FOUR, S.CLUB],
+                                                     [R.KING, S.CLUB]]))
 
-        self.fiveCardHands['AceHigh'] = fivecard.FiveCard(cards.multiCard([[Ranks.KING, Suits.SPADE],
-                                                                        [Ranks.THREE, Suits.CLUB],
-                                                                        [Ranks.FIVE, Suits.DIAMOND],
-                                                                        [Ranks.EIGHT, Suits.SPADE],
-                                                                        [Ranks.ACE, Suits.HEART]]))
+        self.fiveHands['AceHigh'] = FiveCard(multiCard([[R.KING, S.SPADE],
+                                                        [R.THREE, S.CLUB],
+                                                        [R.FIVE, S.DIAMOND],
+                                                        [R.EIGHT, S.SPADE],
+                                                        [R.ACE, S.HEART]]))
 
-        self.fiveCardHands['HighCard'] = fivecard.FiveCard(cards.multiCard([[Ranks.TWO, Suits.SPADE],
-                                                                        [Ranks.FOUR, Suits.CLUB],
-                                                                        [Ranks.FIVE, Suits.SPADE],
-                                                                        [Ranks.SIX, Suits.DIAMOND],
-                                                                        [Ranks.SEVEN, Suits.HEART]]))
+        self.fiveHands['HighCard'] = FiveCard(multiCard([[R.TWO, S.SPADE],
+                                                         [R.FOUR, S.CLUB],
+                                                         [R.FIVE, S.SPADE],
+                                                         [R.SIX, S.DIAMOND],
+                                                         [R.SEVEN, S.HEART]]))
 
     def testBestHands(self):
-        handDict = {"AceHigh":fivecard.FiveCard.Hand.HIGH,
-                    "HighCard":fivecard.FiveCard.Hand.HIGH,
-                    "Pair":fivecard.FiveCard.Hand.PAIR,
-                    "TwoPair":fivecard.FiveCard.Hand.TWOPAIR,
-                    "ThreeOfKind":fivecard.FiveCard.Hand.THREEOFKIND,
-                    "Straight":fivecard.FiveCard.Hand.STRAIGHT,
-                    "Flush":fivecard.FiveCard.Hand.FLUSH,
-                    "FullHouse":fivecard.FiveCard.Hand.FULLHOUSE,
-                    "FourOfKind":fivecard.FiveCard.Hand.FOUROFKIND,
-                    "StraightFlush":fivecard.FiveCard.Hand.STRAIGHTFLUSH,
-                    "RoyalFlush":fivecard.FiveCard.Hand.ROYALFLUSH}
-        for hand in handDict:
-            self.assertEqual(self.fiveCardHands[hand].getHand(), handDict[hand], hand)
-
+        handDict = {"AceHigh": FiveCard.Hand.HIGH,
+                    "HighCard": FiveCard.Hand.HIGH,
+                    "Pair": FiveCard.Hand.PAIR,
+                    "TwoPair": FiveCard.Hand.TWOPAIR,
+                    "Trips": FiveCard.Hand.THREEOFKIND,
+                    "Straight": FiveCard.Hand.STRAIGHT,
+                    "Flush": FiveCard.Hand.FLUSH,
+                    "FullHouse": FiveCard.Hand.FULLHOUSE,
+                    "Quads": FiveCard.Hand.FOUROFKIND,
+                    "sFlush": FiveCard.Hand.STRAIGHTFLUSH,
+                    "RoyalFlush": FiveCard.Hand.ROYALFLUSH}
+        for h in handDict:
+            self.assertEqual(self.fiveHands[h].getHand(), handDict[h], h)
 
     def testAppendedHands(self):
-        self.fiveCardHands["RoyalFlush"].append(cards.Card(Ranks.ACE, Suits.CLUB))
-        self.fiveCardHands["StraightFlush"].append(cards.Card(Ranks.ACE, Suits.CLUB))
-        self.assertTrue(self.fiveCardHands["RoyalFlush"].isRoyalFlush())
-        self.assertTrue(self.fiveCardHands["StraightFlush"].isStraightFlush())
+        self.fiveHands["RoyalFlush"].append(Card(R.ACE, S.CLUB))
+        self.fiveHands["sFlush"].append(Card(R.ACE, S.CLUB))
+        self.assertTrue(self.fiveHands["RoyalFlush"].isRoyalFlush())
+        self.assertTrue(self.fiveHands["sFlush"].isStraightFlush())

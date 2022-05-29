@@ -1,95 +1,88 @@
-import threecard
-import cards
-from cards import Ranks, Suits #syntactic help
-import random
+from threecard import ThreeCard
+from cards import multiCard, Ranks as R, Suits as S
 import unittest
 
-class TestPoker(unittest.TestCase):
 
+class TestPoker(unittest.TestCase):
     @classmethod
     def setUp(self):
-        self.threeCardHand = {}
-        self.threeCardHand['MiniRoyal'] = threecard.ThreeCard(cards.multiCard([[Ranks.QUEEN, Suits.SPADE],
-                                                                               [Ranks.KING, Suits.SPADE],
-                                                                               [Ranks.ACE, Suits.SPADE]]))
+        self.TCPHand = {}
+        self.TCPHand['MiniRoyal'] = ThreeCard(multiCard([[R.QUEEN, S.SPADE],
+                                                         [R.KING, S.SPADE],
+                                                         [R.ACE, S.SPADE]]))
 
-        self.threeCardHand['StraightFlush'] = threecard.ThreeCard(cards.multiCard([[Ranks.SEVEN, Suits.SPADE],
-                                                                                  [Ranks.FIVE, Suits.SPADE],
-                                                                                  [Ranks.SIX, Suits.SPADE]]))
+        self.TCPHand['sFlush'] = ThreeCard(multiCard([[R.SEVEN, S.SPADE],
+                                                      [R.FIVE, S.SPADE],
+                                                      [R.SIX, S.SPADE]]))
 
-        self.threeCardHand['ThreeOfKind'] = threecard.ThreeCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                                                 [Ranks.ACE, Suits.DIAMOND],
-                                                                                 [Ranks.ACE, Suits.CLUB]]))
+        self.TCPHand['Trips'] = ThreeCard(multiCard([[R.ACE, S.SPADE],
+                                                     [R.ACE, S.DIAMOND],
+                                                     [R.ACE, S.CLUB]]))
 
-        self.threeCardHand['Straight'] = threecard.ThreeCard(cards.multiCard([[Ranks.TWO, Suits.SPADE],
-                                                                             [Ranks.THREE, Suits.DIAMOND],
-                                                                             [Ranks.FOUR, Suits.HEART]]))
+        self.TCPHand['Straight'] = ThreeCard(multiCard([[R.TWO, S.SPADE],
+                                                        [R.THREE, S.DIAMOND],
+                                                        [R.FOUR, S.HEART]]))
 
-        self.threeCardHand['Flush'] = threecard.ThreeCard(cards.multiCard([[Ranks.QUEEN, Suits.SPADE],
-                                                                           [Ranks.SEVEN, Suits.SPADE],
-                                                                           [Ranks.TWO, Suits.SPADE]]))
+        self.TCPHand['Flush'] = ThreeCard(multiCard([[R.QUEEN, S.SPADE],
+                                                     [R.SEVEN, S.SPADE],
+                                                     [R.TWO, S.SPADE]]))
 
-        self.threeCardHand['Pair'] = threecard.ThreeCard(cards.multiCard([[Ranks.ACE, Suits.SPADE],
-                                                                          [Ranks.ACE, Suits.DIAMOND],
-                                                                          [Ranks.SEVEN, Suits.SPADE]]))
+        self.TCPHand['Pair'] = ThreeCard(multiCard([[R.ACE, S.SPADE],
+                                                    [R.ACE, S.DIAMOND],
+                                                    [R.SEVEN, S.SPADE]]))
 
-        self.threeCardHand['High'] = threecard.ThreeCard(cards.multiCard([[Ranks.THREE, Suits.DIAMOND],
-                                                                          [Ranks.SEVEN, Suits.CLUB],
-                                                                          [Ranks.TWO, Suits.HEART]]))
+        self.TCPHand['High'] = ThreeCard(multiCard([[R.THREE, S.DIAMOND],
+                                                    [R.SEVEN, S.CLUB],
+                                                    [R.TWO, S.HEART]]))
 
     def testBestHands(self):
-        handDict = {"High":threecard.ThreeCard.Hand.HIGH,
-                    "Pair":threecard.ThreeCard.Hand.PAIR,
-                    "Flush":threecard.ThreeCard.Hand.FLUSH,
-                    "Straight":threecard.ThreeCard.Hand.STRAIGHT,
-                    "ThreeOfKind":threecard.ThreeCard.Hand.THREEOFKIND,
-                    "StraightFlush":threecard.ThreeCard.Hand.STRAIGHTFLUSH,
-                    "MiniRoyal":threecard.ThreeCard.Hand.MINIROYAL,}
-        for hand in handDict:
-            self.assertEqual(self.threeCardHand[hand].getHand(), handDict[hand], hand)
+        handDic = {"High": ThreeCard.Hand.HIGH,
+                   "Pair": ThreeCard.Hand.PAIR,
+                   "Flush": ThreeCard.Hand.FLUSH,
+                   "Straight": ThreeCard.Hand.STRAIGHT,
+                   "Trips": ThreeCard.Hand.THREEOFKIND,
+                   "sFlush": ThreeCard.Hand.STRAIGHTFLUSH,
+                   "MiniRoyal": ThreeCard.Hand.MINIROYAL}
+        for hand in handDic:
+            self.assertEqual(self.TCPHand[hand].getHand(), handDic[hand], hand)
 
     def testHandCoarseComparison(self):
         lastHand = None
-        for hand in self.threeCardHand:
+        for h in self.TCPHand:
             if not lastHand:
-                lastHand = hand
+                lastHand = h
                 continue
-            self.assertTrue(self.threeCardHand[hand]<self.threeCardHand[lastHand], hand)
-            self.assertTrue(self.threeCardHand[hand]<=self.threeCardHand[lastHand], hand)
-            self.assertFalse(self.threeCardHand[hand]>self.threeCardHand[lastHand], hand)
-            self.assertFalse(self.threeCardHand[hand]>=self.threeCardHand[lastHand], hand)
-            lastHand = hand
+            self.assertTrue(self.TCPHand[h] < self.TCPHand[lastHand], h)
+            self.assertTrue(self.TCPHand[h] <= self.TCPHand[lastHand], h)
+            self.assertFalse(self.TCPHand[h] > self.TCPHand[lastHand], h)
+            self.assertFalse(self.TCPHand[h] >= self.TCPHand[lastHand], h)
+            lastHand = h
 
     def testHandFineComparison(self):
-        lesserHigh = threecard.ThreeCard(cards.multiCard([[Ranks.TWO, Suits.SPADE],
-                                                         [Ranks.THREE, Suits.DIAMOND],
-                                                         [Ranks.FIVE, Suits.CLUB]]))
-        lesserPair = threecard.ThreeCard(cards.multiCard([[Ranks.SEVEN, Suits.SPADE],
-                                                         [Ranks.SEVEN, Suits.DIAMOND],
-                                                         [Ranks.THREE, Suits.CLUB]]))
-        lesserFlush = threecard.ThreeCard(cards.multiCard([[Ranks.SIX, Suits.SPADE],
-                                                         [Ranks.QUEEN, Suits.SPADE],
-                                                         [Ranks.TWO, Suits.SPADE]]))
-
-        self.assertTrue(self.threeCardHand["High"]>lesserHigh)
-        self.assertTrue(self.threeCardHand["High"]>=lesserHigh)
-        self.assertFalse(self.threeCardHand["High"]<=lesserHigh)
-        self.assertFalse(self.threeCardHand["High"]<lesserHigh)
-
-        self.assertFalse(lesserHigh>self.threeCardHand["High"])
-        self.assertFalse(lesserHigh>=self.threeCardHand["High"])
-        self.assertTrue(lesserHigh<=self.threeCardHand["High"])
-        self.assertTrue(lesserHigh<self.threeCardHand["High"])
-
-
-
-
-        self.assertTrue(self.threeCardHand["Pair"]>lesserPair)
-        self.assertTrue(self.threeCardHand["Pair"]>=lesserPair)
-        self.assertFalse(self.threeCardHand["Pair"]<=lesserPair)
-        self.assertFalse(self.threeCardHand["Pair"]<lesserPair)
-
-        self.assertTrue(self.threeCardHand["Flush"]>lesserFlush)
-        self.assertTrue(self.threeCardHand["Flush"]>=lesserFlush)
-        self.assertFalse(self.threeCardHand["Flush"]<=lesserFlush)
-        self.assertFalse(self.threeCardHand["Flush"]<lesserFlush)
+        lesser = {}
+        lesser["High"] = ThreeCard(multiCard([[R.TWO, S.SPADE],
+                                              [R.THREE, S.DIAMOND],
+                                              [R.FIVE, S.CLUB]]))
+        lesser["Pair"] = ThreeCard(multiCard([[R.SEVEN, S.SPADE],
+                                              [R.SEVEN, S.DIAMOND],
+                                              [R.THREE, S.CLUB]]))
+        lesser["Flush"] = ThreeCard(multiCard([[R.SIX, S.SPADE],
+                                               [R.QUEEN, S.SPADE],
+                                               [R.TWO, S.SPADE]]))
+        lesser["Straight"] = ThreeCard(multiCard([[R.ACE, S.SPADE],
+                                                  [R.TWO, S.SPADE],
+                                                  [R.THREE, S.CLUB]]))
+        lesser["Trips"] = ThreeCard(multiCard([[R.KING, S.SPADE],
+                                               [R.KING, S.CLUB],
+                                               [R.KING, S.DIAMOND]]))
+        lesser["sFlush"] = ThreeCard(multiCard([[R.ACE, S.SPADE],
+                                                [R.TWO, S.SPADE],
+                                                [R.THREE, S.SPADE]]))
+        lesser["MiniRoyal"] = ThreeCard(multiCard([[R.SIX, S.SPADE],
+                                                   [R.QUEEN, S.SPADE],
+                                                   [R.TWO, S.SPADE]]))
+        for h in self.TCPHand:
+            if h == "MiniRoyal":
+                continue
+            self.assertTrue(self.TCPHand[h] > lesser[h], h)
+            self.assertTrue(self.TCPHand[h] >= lesser[h], h)

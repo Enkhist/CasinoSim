@@ -1,12 +1,12 @@
 import cards
-from cards import Ranks, Suits
+from cards import Ranks as R
 from enum import Enum
 from itertools import groupby
 import copy
 
 """
 This class is going to try to dedicate itself to general poker utilities.
-I intend on making separate 4 card and 3 card utilities. 
+I intend on making separate 4 card and 3 card utilities.
 
 That said, this library will include utilities for spotting 5 card hands
 generally because Let It Ride, Stud, 3 card, and 4 card all have elements
@@ -16,8 +16,10 @@ that utilize 5 card poker hands
 
 class BasePoker:
     def __init__(self, cards=None):
-        self.bestHand = None #stores a Hand enum of the best possible hand at that times
-        self.bestCards = None #stores the best possible hand, at handLength length
+        # stores a Hand enum of the best possible hand at that times
+        self.bestHand = None
+        # stores the best possible hand, at handLength length
+        self.bestCards = None
         if cards:
             self.cards = cards
         else:
@@ -26,14 +28,14 @@ class BasePoker:
 
     def __ge__(self, other):
         if self.__class__ is other.__class__:
-            if self.getHand()>other.getHand():
+            if self.getHand() > other.getHand():
                 return True
-            elif self.getHand()<other.getHand():
+            elif self.getHand() < other.getHand():
                 return False
             else:
                 selfHand = self.bestCards
                 otherHand = other.bestCards
-                for x in range(0,self.handLength):
+                for x in range(0, self.handLength):
                     if selfHand[x] > otherHand[x]:
                         return True
                     elif selfHand[x] < otherHand[x]:
@@ -45,14 +47,14 @@ class BasePoker:
 
     def __gt__(self, other):
         if self.__class__ is other.__class__:
-            if self.getHand()>other.getHand():
+            if self.getHand() > other.getHand():
                 return True
-            elif self.getHand()<other.getHand():
+            elif self.getHand() < other.getHand():
                 return False
             else:
                 selfHand = self.bestCards
                 otherHand = other.bestCards
-                for x in range(0,self.handLength):
+                for x in range(0, self.handLength):
                     if selfHand[x] > otherHand[x]:
                         return True
                     elif selfHand[x] < otherHand[x]:
@@ -64,11 +66,10 @@ class BasePoker:
         return NotImplemented
 
     def __le__(self, other):
-        return other>=self
+        return other >= self
 
     def __lt__(self, other):
-        return other>self
-
+        return other > self
 
     def __repr__(self):
         return str(str(self.bestHand)+str(self.bestCards))
@@ -80,7 +81,7 @@ class BasePoker:
         return ret
 
     def _groupBySuit(self, cardsIn=None):
-        if cardsIn == None:
+        if cardsIn is None:
             cardsIn = self.cards
         suitSortedCards = []
         for suit in cards.Suits:
@@ -88,7 +89,8 @@ class BasePoker:
                 if card.suit == suit:
                     suitSortedCards.append(card)
 
-        return [list(result) for key, result in groupby(suitSortedCards, key=lambda card: card.suit)]
+        return [list(result) for key, result in
+                groupby(suitSortedCards, key=lambda card: card.suit)]
 
     def cardCheck(self, cardCheck):
         """Checks if a specific card can be found in a hand already"""
@@ -106,15 +108,15 @@ class BasePoker:
 
     def _isFlush(self, cards=None):
         """Returns true if full hand is a flush, false if not"""
-        if cards == None:
+        if cards is None:
             cards = self.cards
 
-        #Two card flushes is utter nonsense
-        if len(cards)<3:
+        # Two card flushes is utter nonsense
+        if len(cards) < 3:
             return False
         x = None
         for card in cards:
-            if x == None:
+            if x is None:
                 x = card.suit
                 continue
             if x is not card.suit:
@@ -124,12 +126,12 @@ class BasePoker:
     def _straightRoutine(self, cards):
         x = None
         for card in cards:
-            if x == None:
+            if x is None:
                 x = card.rank.value
                 continue
 
             if card.rank.value != (x+1):
-                if card.rank.value == Ranks.ACE and x is Ranks.KING.value:
+                if card.rank.value == R.ACE and x is R.KING.value:
                     return True
                 return False
             x = card.rank.value
@@ -140,7 +142,7 @@ class BasePoker:
         maxCount = 1
         tempCount = 1
         for card in cards:
-            if x == None:
+            if x is None:
                 x = card.rank.value
                 continue
             if card.rank.value == (x+1):
@@ -148,20 +150,20 @@ class BasePoker:
             elif card.rank.value == x:
                 continue
             else:
-                if card.rank.value == Ranks.ACE and x == Ranks.KING.value:
+                if card.rank.value == R.ACE and x == R.KING.value:
                     tempCount += 1
                 maxCount = tempCount
                 tempCount = 1
             x = card.rank.value
-        return max([maxCount,tempCount])
+        return max([maxCount, tempCount])
 
     def _isSequential(self, cards=None):
         """Returns true if full hand is sequential, false if not"""
-        if cards == None:
+        if cards is None:
             cards = self.cards
 
-        #Two card straights is utter nonsense
-        if len(cards)<3:
+        # Two card straights is utter nonsense
+        if len(cards) < 3:
             return False
         tempHand = copy.copy(cards)
         tempHand.sort(key=lambda x: x.rank.value)
@@ -175,11 +177,11 @@ class BasePoker:
 
     def _straightCount(self, cards=None):
         """returns max straight length"""
-        if cards == None:
+        if cards is None:
             cards = self.cards
 
-        #Two card straights is utter nonsense
-        if len(cards)<3:
+        # Two card straights is utter nonsense
+        if len(cards) < 3:
             return False
 
         finalCount = [0]
@@ -194,29 +196,29 @@ class BasePoker:
             finalCount.append(self._straightCountRoutine(tempHand))
         return max(finalCount)
 
-
     def _isStraightFlush(self, cards=None):
-        if cards == None:
+        if cards is None:
             cards = self.cards
         return self._isSequential(cards) and self._isFlush(cards)
 
     def countDupes(self, cards=None):
-        """returns a dictionary of face values and how many times they appear"""
-        if cards == None:
+        """returns a dictionary of face values and how many times
+        they appear"""
+        if cards is None:
             cards = self.cards
         x = {}
         for card in self.cards:
             if card.rank in x:
-                x[card.rank]+=1
+                x[card.rank] += 1
             else:
-                x.update({card.rank:1})
+                x.update({card.rank: 1})
         return x
 
     def bestDupeHand(self):
         """
         returns the best duplicate-based hand possible
         Returns either a None, or a list whose index 0
-        is the hand Enum, followed by the self.handLength 
+        is the hand Enum, followed by the self.handLength
         best hand. If no pair, returns a HIGH and sorted
         cards.
         """
@@ -227,14 +229,14 @@ class BasePoker:
         if "FOUROFKIND" in self.Hand._member_names_ and dupes[maxRepeat] == 4:
             retHand = []
             for rank in dupes:
-                if dupes[rank]==4:
+                if dupes[rank] == 4:
                     targetRank = rank
                     break
-            for n in range(0,len(scrapCards)):
+            for n in range(0, len(scrapCards)):
                 if scrapCards[n] == targetRank:
                     retHand.append(scrapCards.pop(n))
             retHand.extend(scrapCards)
-            return [self.Hand.FOUROFKIND,retHand]
+            return [self.Hand.FOUROFKIND, retHand]
 
         elif dupes[maxRepeat] == 3:
             retHand = []
@@ -250,40 +252,40 @@ class BasePoker:
                         for card in scrapCards:
                             if card.rank == n:
                                 retHand.append(card)
-                        return [self.Hand.FULLHOUSE,retHand]
+                        return [self.Hand.FULLHOUSE, retHand]
             for n in dupes:
                 if dupes[n] == 3:
                     tripTarget = n
                     break
-            for card in range(0,len(scrapCards)):
+            for card in range(0, len(scrapCards)):
                 if scrapCards[card].rank == tripTarget:
-                    scrapCards.insert(0,scrapCards.pop(card))
-            return [self.Hand.THREEOFKIND,scrapCards]
+                    scrapCards.insert(0, scrapCards.pop(card))
+            return [self.Hand.THREEOFKIND, scrapCards]
 
         elif dupes[maxRepeat] == 2:
             for dupe in dupes:
                 if dupes[dupe] == 2:
-                    for card in range(0,len(scrapCards)):
+                    for card in range(0, len(scrapCards)):
                         if scrapCards[card].rank == dupe:
-                            scrapCards.insert(0,scrapCards.pop(card))
+                            scrapCards.insert(0, scrapCards.pop(card))
             if "TWOPAIR" in self.Hand._member_names_:
                 x = 0
                 for n in dupes:
                     if dupes[n] == 2:
                         if x == 0:
-                            x+=1
+                            x += 1
                             continue
                         else:
-                            return [self.Hand.TWOPAIR,scrapCards]
-            return [self.Hand.PAIR,scrapCards]
+                            return [self.Hand.TWOPAIR, scrapCards]
+            return [self.Hand.PAIR, scrapCards]
         else:
-            return [self.Hand.HIGH,scrapCards]
+            return [self.Hand.HIGH, scrapCards]
 
     def bestStraightHand(self):
         """
         returns the best straight-based hand possible
         Returns either a None, or a list whose index 0
-        is the hand Enum, followed by the self.handLength 
+        is the hand Enum, followed by the self.handLength
         best hand. If no straight, returns None
         """
         straights = []
@@ -291,10 +293,9 @@ class BasePoker:
 
         sortmeths = [lambda x: x.rank.value]
         for card in scrapCards:
-            if card.rank == Ranks.ACE:
-                #Holds a low ace value getter, and a high ace value getter.
-                sortmeths = [lambda x: x.rank.value,lambda y: y._lowAce()]
-
+            if card.rank == R.ACE:
+                # Holds a low ace value getter, and a high ace value getter.
+                sortmeths = [lambda x: x.rank.value, lambda y: y._lowAce()]
 
         for sortmeth in sortmeths:
             currentStraight = []
@@ -308,84 +309,84 @@ class BasePoker:
                 elif currentStraight[-1].rank.value == sortmeth(card):
                     continue
                 else:
-                    if len(currentStraight)>=self.handLength:
+                    if len(currentStraight) >= self.handLength:
                         straights.append(currentStraight)
                     currentStraight = []
-            #a repeat to just dump the currentStraight before the second check
-            if len(currentStraight)>=self.handLength:
+            # a repeat to just dump the currentStraight before the second check
+            if len(currentStraight) >= self.handLength:
                 straights.append(currentStraight)
             currentStraight = []
 
-        #no straight == we are done here
+        # no straight == we are done here
         if len(straights) == 0:
             return [None, []]
 
-        #sort all straights by first index(which should be highest card)
-        straights.sort(key=lambda x:x[0].rank.value)
+        # sort all straights by first index(which should be highest card)
+        straights.sort(key=lambda x: x[0].rank.value)
 
-        #check for any straight flushes
+        # check for any straight flushes
         straightFlushes = []
         for straight in straights:
             for suit in self._groupBySuit(straight):
-                if len(suit)>=self.handLength:
+                if len(suit) >= self.handLength:
                     straightFlushes.append(suit)
         if len(straightFlushes) > 0:
-            #check if royal
+            # check if royal
             rhand = None
             if "ROYALFLUSH" in self.Hand._member_names_:
-                    rhand = self.Hand.ROYALFLUSH
-                    royalCards = [Ranks.TEN, Ranks.JACK, Ranks.QUEEN, Ranks.KING, Ranks.ACE]
+                rhand = self.Hand.ROYALFLUSH
+                royalCards = [R.TEN, R.JACK, R.QUEEN, R.KING, R.ACE]
             elif "MINIROYAL" in self.Hand._member_names_:
-                    rhand = self.Hand.MINIROYAL
-                    royalCards = [Ranks.QUEEN, Ranks.KING, Ranks.ACE]
+                rhand = self.Hand.MINIROYAL
+                royalCards = [R.QUEEN, R.KING, R.ACE]
             if rhand:
                 for sflush in straightFlushes:
                     royalTest = [n for n in sflush if n.rank in royalCards]
-                    if len(royalTest)>=self.handLength:
-                        return [rhand,sflush]
-            return [self.Hand.STRAIGHTFLUSH,straightFlushes[0]]
+                    if len(royalTest) >= self.handLength:
+                        return [rhand, sflush]
+            return [self.Hand.STRAIGHTFLUSH, straightFlushes[0]]
         else:
-            return [self.Hand.STRAIGHT,straights[0]]
+            return [self.Hand.STRAIGHT, straights[0]]
 
     def bestFlush(self):
         """
         returns the best flush hand possible
         Returns either a None, or a list whose index 0
-        is the hand Enum, followed by the self.handLength 
+        is the hand Enum, followed by the self.handLength
         best flush. If no straight, returns None in index 0
         """
         flushes = []
         groups = self._groupBySuit(self.cards)
         for group in groups:
             if len(group) >= self.handLength:
-                group.sort(key=lambda x:x.rank,reverse=True)
+                group.sort(key=lambda x: x.rank, reverse=True)
                 flushes.append(group)
         if len(flushes) > 1:
-            flushes.sort(key=lambda x:x[0].rank, reverse=True)
-            return [self.Hand.FLUSH,flushes[0]]
+            flushes.sort(key=lambda x: x[0].rank, reverse=True)
+            return [self.Hand.FLUSH, flushes[0]]
         elif len(flushes) == 1:
-            return [self.Hand.FLUSH,flushes[0]]
+            return [self.Hand.FLUSH, flushes[0]]
         else:
             return [None, []]
+
     def isPair(self):
         dupes = self.countDupes()
-        pairCount = 0
         for rank in dupes:
-            if dupes[rank]>=2:
+            if dupes[rank] >= 2:
                 return True
         return False
 
     def isFlush(self, maxlen):
-        if len(self.cards)<maxlen:
+        if len(self.cards) < maxlen:
             return False
 
         groups = self._groupBySuit(self.cards)
         for group in groups:
             if len(group) >= maxlen:
-                group.sort(key=lambda x:x.rank,reverse=True)
+                group.sort(key=lambda x: x.rank, reverse=True)
                 return group
 
-    def isStraight(self,maxlen):
+    def isStraight(self, maxlen):
         if self._straightCount(self.cards) >= maxlen:
             return True
         return False
@@ -402,20 +403,20 @@ class BasePoker:
 
         grouped = self._groupBySuit(self.cards)
         for cardGroup in grouped:
-            if len(cardGroup)<maxlen:
+            if len(cardGroup) < maxlen:
                 continue
-            if self._straightCount(cardGroup)>=maxlen:
+            if self._straightCount(cardGroup) >= maxlen:
                 response = True
         return response
-        
+
     def sortedHand(self):
         return
 
     def sortedHandHigh(self):
         returnHand = copy.copy(self.cards)
         returnHand.sort(key=lambda x: x.rank, reverse=True)
-        if returnHand[-1].rank == Ranks.ACE:
-            returnHand.insert(0,returnHand.pop(-1))
+        if returnHand[-1].rank == R.ACE:
+            returnHand.insert(0, returnHand.pop(-1))
         return returnHand[0:self.handLength]
 
 
@@ -424,11 +425,14 @@ class BaseHand(Enum):
         if self.__class__ is other.__class__:
             return self.value >= other.value
         return NotImplemented
+
     def __gt__(self, other):
         if self.__class__ is other.__class__:
             return self.value > other.value
         return NotImplemented
+
     def __le__(self, other):
-        return other>=self
+        return other >= self
+
     def __lt__(self, other):
-        return other>self
+        return other > self
