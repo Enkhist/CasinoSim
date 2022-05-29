@@ -66,6 +66,3 @@ class FiveCard(poker.BasePoker):
             self.bestHand = topDupe[0]
             self.bestCards = topDupe[1][0:self.handLength]
             return
-
-    def getHand(self):
-        return self.bestHand

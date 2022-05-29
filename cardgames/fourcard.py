@@ -16,9 +16,6 @@ class FourCard(poker.BasePoker):
         self.handLength = 4
         super().__init__(cards)
 
-    def getHand(self):
-        return self.bestHand
-
     def setHand(self):
         """Return the best hand possible with the cards"""
         topDupe = self.bestDupeHand()

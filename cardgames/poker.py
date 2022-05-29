@@ -28,9 +28,9 @@ class BasePoker:
 
     def __ge__(self, other):
         if self.__class__ is other.__class__:
-            if self.getHand() > other.getHand():
+            if self.bestHand > other.bestHand:
                 return True
-            elif self.getHand() < other.getHand():
+            elif self.bestHand < other.bestHand:
                 return False
             else:
                 selfHand = self.bestCards
@@ -47,9 +47,9 @@ class BasePoker:
 
     def __gt__(self, other):
         if self.__class__ is other.__class__:
-            if self.getHand() > other.getHand():
+            if self.bestHand > other.bestHand:
                 return True
-            elif self.getHand() < other.getHand():
+            elif self.bestHand < other.bestHand:
                 return False
             else:
                 selfHand = self.bestCards
