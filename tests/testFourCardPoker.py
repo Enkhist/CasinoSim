@@ -17,10 +17,10 @@ class TestPoker(unittest.TestCase):
                                                       [R.SIX, S.SPADE],
                                                       [R.SEVEN, S.SPADE]]))
 
-        self.fcpHands['ThreeOfKind'] = FourCard(multiCard([[R.ACE, S.SPADE],
-                                                           [R.ACE, S.CLUB],
-                                                           [R.ACE, S.DIAMOND],
-                                                           [R.KING, S.HEART]]))
+        self.fcpHands['Trips'] = FourCard(multiCard([[R.ACE, S.SPADE],
+                                                     [R.ACE, S.CLUB],
+                                                     [R.ACE, S.DIAMOND],
+                                                     [R.KING, S.HEART]]))
 
         self.fcpHands['Flush'] = FourCard(multiCard([[R.ACE, S.SPADE],
                                                      [R.SEVEN, S.SPADE],
@@ -53,7 +53,7 @@ class TestPoker(unittest.TestCase):
                     "TwoPair": FourCard.Hand.TWOPAIR,
                     "Straight": FourCard.Hand.STRAIGHT,
                     "Flush": FourCard.Hand.FLUSH,
-                    "ThreeOfKind": FourCard.Hand.THREEOFKIND,
+                    "Trips": FourCard.Hand.THREEOFKIND,
                     "sFlush": FourCard.Hand.STRAIGHTFLUSH,
                     "FourOfKind": FourCard.Hand.FOUROFKIND}
         for h in handDict:

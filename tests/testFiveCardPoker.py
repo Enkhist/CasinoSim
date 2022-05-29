@@ -2,6 +2,7 @@ from fivecard import FiveCard
 from cards import multiCard, Ranks as R, Suits as S, Card
 import unittest
 
+
 class TestPoker(unittest.TestCase):
 
     @classmethod
