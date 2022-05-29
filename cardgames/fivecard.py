@@ -29,67 +29,6 @@ class FiveCard(poker.BasePoker):
     every function to test the cards.
     """
 
-    def isRoyalFlush(self, cards=None):
-        if self.bestHand == self.Hand.ROYALFLUSH:
-            return self.Hand.ROYALFLUSH
-
-    def isStraightFlush(self):
-        if self.bestHand in [self.Hand.ROYALFLUSH, self.Hand.STRAIGHTFLUSH]:
-            return True
-        return False
-
-    def isFourOfKind(self, cards=None):
-        if self.bestHand == self.Hand.FOUROFKIND:
-            return True
-        return False
-
-    def isFullHouse(self, cards=None):
-        if self.bestHand == self.Hand.FULLHOUSE:
-            return True
-        return False
-
-    def isFlush(self):
-        return super().isFlush(5)
-
-    def isStraight(self):
-        if self.bestHand in [self.Hand.ROYALFLUSH,
-                             self.Hand.STRAIGHTFLUSH,
-                             self.Hand.STRAIGHT]:
-            return True
-        return False
-
-    def isThreeOfKind(self, cards=None):
-        if self.bestHand in [self.Hand.THREEOFKIND, self.Hand.FULLHOUSE,
-                             self.Hand.FOUROFKIND]:
-            return True
-        return False
-
-    def isTwoPair(self, cards=None):
-        if self.bestHand in [self.Hand.FULLHOUSE, self.Hand.TWOPAIR]:
-            return True
-        return False
-
-    def isPair(self):
-        if self.bestHand in [self.Hand.THREEOFKIND, self.Hand.FULLHOUSE,
-                             self.Hand.FOUROFKIND, self.Hand.TWOPAIR,
-                             self.Hand.PAIR]:
-            return True
-
-    def isHighCard(self):
-        """Checks that the hand is nothing but a useless high card hand.
-        This function has the distinction of being reliant on the cards
-        not being anything else.
-        """
-        dupes = self.countDupes(self.cards)
-        for card in dupes:
-            if dupes[card] > 1:
-                return False
-        if self.isFlush():
-            return False
-        if self.isStraight():
-            return False
-        return True
-
     def setHand(self):
         """Return the best hand possible with the cards"""
         topStraight = self.bestStraightHand()

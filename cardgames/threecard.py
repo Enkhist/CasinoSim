@@ -17,50 +17,6 @@ class ThreeCard(poker.BasePoker):
         self.handLength = 3
         super().__init__(cards)
 
-    def isMiniRoyal(self):
-        royalCards = [R.QUEEN, R.KING, R.ACE]
-
-        testStack = []
-
-        for card in self.cards:
-            if card.rank in royalCards:
-                testStack.append(card)
-        grouped = self._groupBySuit(testStack)
-        for cardGroup in grouped:
-            if self._isSequential(cardGroup):
-                return True
-        return False
-
-    def isStraightFlush(self):
-        return super().isStraightFlush(3)
-
-    def isThreeOfKind(self):
-        return super().isThreeOfKind()
-
-    def isStraight(self):
-        return super().isStraight(3)
-
-    def isFlush(self):
-        return super().isFlush(3)
-
-    def isPair(self):
-        return super().isPair()
-
-    def isHighCard(self):
-        """Checks that the hand is nothing but a useless high card hand.
-        This function has the distinction of being reliant on the cards
-        not being anything else.
-        """
-        dupes = self.countDupes()
-        for card in dupes:
-            if dupes[card] > 1:
-                return False
-        if self.isFlush():
-            return False
-        if self.isStraight():
-            return False
-        return True
-
     def setHand(self):
         """Return the best hand possible with the cards"""
         topStraight = self.bestStraightHand()

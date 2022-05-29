@@ -88,9 +88,3 @@ class TestPoker(unittest.TestCase):
                     "RoyalFlush": FiveCard.Hand.ROYALFLUSH}
         for h in handDict:
             self.assertEqual(self.fiveHands[h].getHand(), handDict[h], h)
-
-    def testAppendedHands(self):
-        self.fiveHands["RoyalFlush"].append(Card(R.ACE, S.CLUB))
-        self.fiveHands["sFlush"].append(Card(R.ACE, S.CLUB))
-        self.assertTrue(self.fiveHands["RoyalFlush"].isRoyalFlush())
-        self.assertTrue(self.fiveHands["sFlush"].isStraightFlush())
