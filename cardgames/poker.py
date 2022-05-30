@@ -1,5 +1,5 @@
-import cardgames.cards as cards
-from cardgames.cards import Ranks as R
+from cardgames import cards
+from cards import Ranks as R
 from enum import Enum
 from itertools import groupby
 import copy
@@ -88,7 +88,6 @@ class BasePoker:
             for card in cardsIn:
                 if card.suit == suit:
                     suitSortedCards.append(card)
-
         return [list(result) for key, result in
                 groupby(suitSortedCards, key=lambda card: card.suit)]
 
