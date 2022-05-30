@@ -114,8 +114,8 @@ class BasePoker:
         sortedx = {}
         for card in self.cards:
             if card.rank in rawx:
-                if rawx[card.rank] >= 3 and quads:
-                    rawx[card.rank] += 1
+                if rawx[card.rank] >= 3 and not quads:
+                    continue
                 else:
                     rawx[card.rank] += 1
             else:
