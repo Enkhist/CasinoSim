@@ -1,5 +1,4 @@
 import cardgames.poker as poker
-import copy
 
 
 class ThreeCard(poker.BasePoker):

@@ -1,5 +1,4 @@
-from cardgames import cards
-from cards import Ranks as R
+from cardgames.cards import Ranks as R, Suits
 from enum import Enum
 from itertools import groupby
 import copy
@@ -84,7 +83,7 @@ class BasePoker:
         if cardsIn is None:
             cardsIn = self.cards
         suitSortedCards = []
-        for suit in cards.Suits:
+        for suit in Suits:
             for card in cardsIn:
                 if card.suit == suit:
                     suitSortedCards.append(card)
@@ -101,7 +100,7 @@ class BasePoker:
     def append(self, card):
         if isinstance(card, list):
             self.cards.extend(card)
-        elif isinstance(card, cards.Card):
+        elif isinstance(card, 'cards.Card'):
             self.cards.append(card)
         self.setHand()
 
