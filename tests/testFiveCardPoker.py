@@ -1,4 +1,4 @@
-from cardgames.fivecard import FiveCard
+from cardgames import FiveCard
 from cardgames.cards import multiCard, Ranks as R, Suits as S, Card
 import unittest
 
@@ -87,4 +87,4 @@ class TestPoker(unittest.TestCase):
                     "sFlush": FiveCard.Hand.STRAIGHTFLUSH,
                     "RoyalFlush": FiveCard.Hand.ROYALFLUSH}
         for h in handDict:
-            self.assertEqual(self.fiveHands[h].getHand(), handDict[h], h)
+            self.assertEqual(self.fiveHands[h].bestHand, handDict[h], h)

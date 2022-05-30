@@ -57,4 +57,4 @@ class TestPoker(unittest.TestCase):
                     "sFlush": FourCard.Hand.STRAIGHTFLUSH,
                     "FourOfKind": FourCard.Hand.FOUROFKIND}
         for h in handDict:
-            self.assertEqual(self.fcpHands[h].getHand(), handDict[h], h)
+            self.assertEqual(self.fcpHands[h].bestHand, handDict[h], h)
