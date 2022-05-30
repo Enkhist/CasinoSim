@@ -105,18 +105,25 @@ class BasePoker:
             self.cards.append(card)
         self.setHand()
 
-    def countDupes(self, cards=None):
+    def countDupes(self, cards=None, quads=True):
         """returns a dictionary of face values and how many times
         they appear"""
         if cards is None:
             cards = self.cards
-        x = {}
+        rawx = {}
+        sortedx = {}
         for card in self.cards:
-            if card.rank in x:
-                x[card.rank] += 1
+            if card.rank in rawx:
+                if rawx[card.rank] >= 3 and quads:
+                    rawx[card.rank] += 1
+                else:
+                    rawx[card.rank] += 1
             else:
-                x.update({card.rank: 1})
-        return x
+                rawx.update({card.rank: 1})
+        for rank in sorted(rawx, key=lambda x: (-rawx.get(x), -x.value)):
+            if rawx[rank] > 1:
+                sortedx[rank] = rawx[rank]
+        return sortedx
 
     def bestDupeHand(self):
         """
@@ -128,61 +135,48 @@ class BasePoker:
         """
         scrapCards = copy.copy(self.cards)
         scrapCards.sort(key=lambda x: x.rank.value, reverse=True)
-        dupes = self.countDupes()
-        maxRepeat = max(dupes, key=dupes.get)
-        if "FOUROFKIND" in self.Hand._member_names_ and dupes[maxRepeat] == 4:
-            retHand = []
-            for rank in dupes:
-                if dupes[rank] == 4:
-                    targetRank = rank
-                    break
-            for n in range(0, len(scrapCards)):
-                if scrapCards[n] == targetRank:
-                    retHand.append(scrapCards.pop(n))
-            retHand.extend(scrapCards)
-            return [self.Hand.FOUROFKIND, retHand]
-
-        elif dupes[maxRepeat] == 3:
-            retHand = []
-            for n in dupes:
-                if dupes[n] == 3:
-                    tripTarget = n
-                    break
-            if "FULLHOUSE" in self.Hand._member_names_:
-                for n in dupes:
-                    if dupes[n] == 3:
-                        continue
-                    if dupes[n] == 2:
-                        for card in scrapCards:
-                            if card.rank == tripTarget:
-                                retHand.append(card)
-                        for card in scrapCards:
-                            if card.rank == n:
-                                retHand.append(card)
-                        return [self.Hand.FULLHOUSE, retHand]
-            for card in range(0, len(scrapCards)):
-                if scrapCards[card].rank == tripTarget:
-                    scrapCards.insert(0, scrapCards.pop(card))
-            return [self.Hand.THREEOFKIND, scrapCards]
-
-        elif dupes[maxRepeat] == 2:
-            for dupe in dupes:
-                if dupes[dupe] == 2:
-                    for card in range(0, len(scrapCards)):
-                        if scrapCards[card].rank == dupe:
-                            scrapCards.insert(0, scrapCards.pop(card))
-            if "TWOPAIR" in self.Hand._member_names_:
-                x = 0
-                for n in dupes:
-                    if dupes[n] == 2:
-                        if x == 0:
-                            x += 1
-                            continue
-                        else:
-                            return [self.Hand.TWOPAIR, scrapCards]
-            return [self.Hand.PAIR, scrapCards]
-        else:
+        isQuads = bool("FOUROFKIND" in self.Hand._member_names_)
+        isFullHouse = bool("FULLHOUSE" in self.Hand._member_names_)
+        isTwoPair = bool("TWOPAIR" in self.Hand._member_names_)
+        dupes = self.countDupes(isQuads)
+        if len(dupes) == 0:
             return [self.Hand.HIGH, scrapCards]
+        dupeIndex = list(dupes.keys())
+
+        # Quads
+        if isQuads and dupes[dupeIndex[0]] == 4:
+            for w in range(0, len(scrapCards)):
+                if scrapCards[w].rank == dupeIndex[0]:
+                    scrapCards.insert(0, scrapCards.pop(w))
+            return [self.Hand.FOUROFKIND, scrapCards]
+        # Trips and Full house
+        elif dupes[dupeIndex[0]] == 3:
+            # Sort trips in front
+            for z in range(0, len(scrapCards)):
+                if scrapCards[z].rank == dupeIndex[0]:
+                    scrapCards.insert(0, scrapCards.pop(z))
+            if isFullHouse and len(dupes) > 1:
+                dupeIndex.sort()
+                for dupe in dupeIndex:
+                    if dupe == scrapCards[0].rank:
+                        continue
+                    for z in range(3, len(scrapCards)):
+                        if scrapCards[z].rank == dupe:
+                            scrapCards.insert(3, scrapCards.pop(z))
+                return [self.Hand.FULLHOUSE, scrapCards]
+            return [self.Hand.THREEOFKIND, scrapCards]
+        # pairs, 2 pairs
+        elif dupes[dupeIndex[0]] == 2:
+            # sort this pair in front
+            for z in range(0, len(scrapCards)):
+                if scrapCards[z].rank == dupeIndex[0]:
+                    scrapCards.insert(0, scrapCards.pop(z))
+            # check for second pair
+            if isTwoPair and len(dupes) > 1:
+                if scrapCards[z].rank == dupeIndex[1]:
+                    scrapCards.insert(2, scrapCards.pop(z))
+                return [self.Hand.TWOPAIR, scrapCards]
+            return [self.Hand.PAIR, scrapCards]
 
     def bestStraightHand(self):
         """
