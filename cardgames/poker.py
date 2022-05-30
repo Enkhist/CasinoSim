@@ -212,7 +212,8 @@ class BasePoker:
             # a repeat to just dump the currentStraight before the second check
             if len(currentStraight) >= self.handLength:
                 straights.append(currentStraight)
-            currentStraight = []
+            if len(straights) > 0:
+                break
 
         # no straight == we are done here
         if len(straights) == 0:
