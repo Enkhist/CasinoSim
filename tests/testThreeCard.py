@@ -1,4 +1,4 @@
-from cardgames.threecard import ThreeCard
+from cardgames.pokerbases import ThreeCard
 from cardgames.cards import multiCard, Ranks as R, Suits as S
 import unittest
 

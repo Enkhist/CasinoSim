@@ -1,4 +1,4 @@
-from cardgames import FiveCard
+from cardgames.pokerbases import FiveCard
 from cardgames.cards import multiCard, Ranks as R, Suits as S, Card
 import unittest
 
