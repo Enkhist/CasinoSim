@@ -20,13 +20,9 @@ class ThreeCard(poker.BasePoker):
     def setHand(self):
         """Return the best hand possible with the cards"""
         topStraight = self.bestStraightHand()
-        if topStraight[0] == self.Hand.MINIROYAL:
+        if topStraight[0] in [self.Hand.MINIROYAL,
+                              self.Hand.STRAIGHTFLUSH]:
             self.bestHand = self.Hand.MINIROYAL
-            self.bestCards = topStraight[1][0:self.handLength]
-            return
-
-        elif topStraight[0] == self.Hand.STRAIGHTFLUSH:
-            self.bestHand = self.Hand.STRAIGHTFLUSH
             self.bestCards = topStraight[1][0:self.handLength]
             return
 
@@ -48,19 +44,10 @@ class ThreeCard(poker.BasePoker):
             self.bestCards = bestFlush[0:self.handLength]
             return
 
-        if topDupe[0] == self.Hand.PAIR:
-            self.bestHand = self.Hand.PAIR
-            self.bestCards = topDupe[1][0:self.handLength]
-            return
-
         else:
-            self.bestHand = self.Hand.HIGH
+            self.bestHand = topDupe[0]
             self.bestCards = topDupe[1][0:self.handLength]
             return
-
-    def getHand(self):
-        """Return the best hand possible with the cards"""
-        return self.bestHand
 
     def sortedHand(self):
         hand = self.getHand()
