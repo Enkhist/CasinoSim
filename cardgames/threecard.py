@@ -1,5 +1,4 @@
 import cardgames.poker as poker
-from cardgames.poker import R
 import copy
 
 
@@ -22,7 +21,7 @@ class ThreeCard(poker.BasePoker):
         topStraight = self.bestStraightHand()
         if topStraight[0] in [self.Hand.MINIROYAL,
                               self.Hand.STRAIGHTFLUSH]:
-            self.bestHand = self.Hand.MINIROYAL
+            self.bestHand = topStraight[0]
             self.bestCards = topStraight[1][0:self.handLength]
             return
 
@@ -48,27 +47,3 @@ class ThreeCard(poker.BasePoker):
             self.bestHand = topDupe[0]
             self.bestCards = topDupe[1][0:self.handLength]
             return
-
-    def sortedHand(self):
-        hand = self.getHand()
-        returnHand = copy.copy(self.cards)
-        returnHand.sort(key=lambda x: x.rank, reverse=True)
-        if returnHand[-1].rank == R.ACE:
-            returnHand.insert(0, returnHand.pop(-1))
-
-        if hand == self.Hand.HIGH:
-            return returnHand[0:self.handLength]
-
-        if hand == self.Hand.PAIR:
-            dupes = self.countDupes(returnHand)
-            for card in dupes:
-                if dupes[card] == 2:
-                    target = card
-            for x in range(0, len(returnHand)):
-                if returnHand[x].rank == target:
-                    returnHand.insert(0, returnHand.pop(x))
-            return returnHand
-
-        if hand == self.Hand.FLUSH:
-            if len(returnHand) == self.handLength:
-                return returnHand
