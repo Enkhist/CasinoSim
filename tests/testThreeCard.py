@@ -44,7 +44,7 @@ class TestPoker(unittest.TestCase):
                    "sFlush": ThreeCard.Hand.STRAIGHTFLUSH,
                    "MiniRoyal": ThreeCard.Hand.MINIROYAL}
         for hand in handDic:
-            self.assertEqual(self.TCPHand[hand].getHand(), handDic[hand], hand)
+            self.assertEqual(self.TCPHand[hand].bestHand, handDic[hand], hand)
 
     def testHandCoarseComparison(self):
         lastHand = None
