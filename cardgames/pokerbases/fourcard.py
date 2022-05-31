@@ -1,4 +1,4 @@
-import cardgames.pokerbases.poker as poker
+import poker
 
 
 class FourCard(poker.BasePoker):
